@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         bootstrap="bootstrap.php"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         verbose="false">
+    <testsuites>
+        <testsuite name="Main">
+            <directory>main</directory>
+        </testsuite>
+        <testsuite name="Classes">
+            <directory>classes</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../classes</directory>
+            <file>../captcha.plugin.php</file>
+        </whitelist>
+    </filter>
+</phpunit>

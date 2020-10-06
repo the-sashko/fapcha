@@ -1,0 +1,14 @@
+{
+    "test": {
+        "gender_derivatives": false
+    },
+    "uk": {
+        "gender_derivatives": true
+    },
+    "en": {
+        "gender_derivatives": false
+    },
+    "ru": {
+        "gender_derivatives": true
+    }
+}
