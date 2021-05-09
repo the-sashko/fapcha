@@ -19,8 +19,8 @@ class CaptchaPlugin implements ICaptchaPlugin
 
     public function __construct()
     {
-        $this->_text     = new CaptchaText();
-        $this->_image    = new CaptchaImage();
+        $this->_text  = new CaptchaText();
+        $this->_image = new CaptchaImage();
     }
 
     public function setSettings(?array $settingsData = null): void
