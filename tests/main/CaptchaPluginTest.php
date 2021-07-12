@@ -99,9 +99,9 @@ class CaptchaPluginTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaPlugin cron Method
+     * Unit Test Of CaptchaPlugin updateByCron Method
      */
-    public function testCron(): void
+    public function testUpdateByCron(): void
     {
         $this->removeStore();
 
@@ -110,7 +110,7 @@ class CaptchaPluginTest extends CaptchaTest
         $exception = null;
 
         try {
-            $captchaPlugin->cron();
+            $captchaPlugin->updateByCron();
         } catch (Exception $exception) {
             $this->assertInstanceOf(
                 'Core\Plugins\Captcha\Exceptions\CaptchaPluginException',
@@ -137,7 +137,7 @@ class CaptchaPluginTest extends CaptchaTest
         $this->assertNotEmpty($exception);
 
         $captchaPlugin->setSettings($this->getSettingsData());
-        $captchaPlugin->cron();
+        $captchaPlugin->updateByCron();
 
         $this->assertTrue(file_exists(static::DATABASE_FILE_PATH));
         $this->assertTrue(is_file(static::DATABASE_FILE_PATH));

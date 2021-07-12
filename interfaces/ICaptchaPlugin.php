@@ -9,5 +9,5 @@ interface ICaptchaPlugin
 
     public function check(?string $text = null, ?string $hash = null): bool;
 
-    public function cron(): void;
+    public function updateByCron(): void;
 }

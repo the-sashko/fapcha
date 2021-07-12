@@ -65,7 +65,7 @@ class CaptchaPlugin implements ICaptchaPlugin
         return $hash == $this->_getHash($text);
     }
 
-    public function cron(): void
+    public function updateByCron(): void
     {
         if (empty($this->_settings)) {
             throw new CaptchaPluginException(
