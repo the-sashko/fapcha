@@ -26,12 +26,12 @@ $dataDirPath = __DIR__.'/captcha';
 /**
  * Secret String For Creating Unique Hashes
  */
-$hashSalt = <SECURITY_HASH_STRING>;
+$hashSalt = '<SECURITY_HASH_STRING>';
 
 /**
  * URL Part For Web Accesss To img Directory With Captcha Images
  */
-$imageUrlTemlate = '/captcha/img/';
+$imageUrlTemplate = '/captcha/img/';
 
 /**
  * Captcha Language Code (Need To be Same As Dictionary Name)
@@ -41,7 +41,7 @@ $language = 'uk';
 $settings = [
     'data_dir_path'      => $dataDirPath,
     'hash_salt'          => $hashSalt,
-    'image_url_template' => $imageUrlTemlate,
+    'image_url_template' => $imageUrlTemplate,
     'language'           => $language
 ];
 
