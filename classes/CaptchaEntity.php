@@ -1,22 +1,43 @@
 <?php
-namespace Core\Plugins\Captcha\Classes;
 
-use Core\Plugins\Captcha\Interfaces\ICaptchaEntity;
-use Core\Plugins\Captcha\Interfaces\ICaptchaSettings;
+namespace Sonder\Plugins\Captcha\Classes;
 
-use Core\Plugins\Captcha\Exceptions\CaptchaEntityException;
+use Sonder\Plugins\Captcha\Exceptions\CaptchaEntityException;
+use Sonder\Plugins\Captcha\Exceptions\CaptchaException;
+use Sonder\Plugins\Captcha\Interfaces\ICaptchaEntity;
+use Sonder\Plugins\Captcha\Interfaces\ICaptchaSettings;
 
-class CaptchaEntity implements ICaptchaEntity
+final class CaptchaEntity implements ICaptchaEntity
 {
-    private $_text = null;
+    /**
+     * @var string|null
+     */
+    private ?string $_text = null;
 
-    private $_hash = null;
+    /**
+     * @var string|null
+     */
+    private ?string $_hash = null;
 
-    private $_imageFilePath = null;
+    /**
+     * @var string|null
+     */
+    private ?string $_imageFilePath = null;
 
-    private $_imageURLPath = null;
+    /**
+     * @var string|null
+     */
+    private ?string $_imageURLPath = null;
 
-    public function __construct(
+    /**
+     * @param string $text
+     * @param string $hash
+     * @param string $imageFileName
+     * @param ICaptchaSettings $captchaSettings
+     *
+     * @throws CaptchaEntityException
+     */
+    final public function __construct(
         string           $text,
         string           $hash,
         string           $imageFileName,
@@ -28,71 +49,103 @@ class CaptchaEntity implements ICaptchaEntity
         $this->_setImagePath($imageFileName, $captchaSettings);
     }
 
-    public function getText(): string
+    /**
+     * @return string
+     *
+     * @throws CaptchaEntityException
+     */
+    final public function getText(): string
     {
         if (empty($this->_text)) {
             throw new CaptchaEntityException(
                 CaptchaEntityException::MESSAGE_ENTITY_TEXT_IS_EMPTY,
-                CaptchaEntityException::CODE_ENTITY_TEXT_IS_EMPTY
+                CaptchaException::CODE_ENTITY_TEXT_IS_EMPTY
             );
         }
 
         return $this->_text;
     }
 
-    public function getHash(): string
+    /**
+     * @return string
+     *
+     * @throws CaptchaEntityException
+     */
+    final public function getHash(): string
     {
         if (empty($this->_hash)) {
             throw new CaptchaEntityException(
                 CaptchaEntityException::MESSAGE_ENTITY_HASH_IS_EMPTY,
-                CaptchaEntityException::CODE_ENTITY_HASH_IS_EMPTY
+                CaptchaException::CODE_ENTITY_HASH_IS_EMPTY
             );
         }
 
         return $this->_hash;
     }
 
-    public function getImageFilePath(): string
+    /**
+     * @return string
+     *
+     * @throws CaptchaEntityException
+     */
+    final public function getImageFilePath(): string
     {
         if (empty($this->_imageFilePath)) {
 
             throw new CaptchaEntityException(
                 CaptchaEntityException::MESSAGE_ENTITY_FILE_PATH_IS_EMPTY,
-                CaptchaEntityException::CODE_ENTITY_FILE_PATH_IS_EMPTY
+                CaptchaException::CODE_ENTITY_FILE_PATH_IS_EMPTY
             );
         }
 
         return $this->_imageFilePath;
     }
 
-    public function getImageUrlPath(): string
+    /**
+     * @return string
+     *
+     * @throws CaptchaEntityException
+     */
+    final public function getImageUrlPath(): string
     {
         if (empty($this->_imageURLPath)) {
             throw new CaptchaEntityException(
                 CaptchaEntityException::MESSAGE_ENTITY_URL_PATH_IS_EMPTY,
-                CaptchaEntityException::CODE_ENTITY_URL_PATH_IS_EMPTY
+                CaptchaException::CODE_ENTITY_URL_PATH_IS_EMPTY
             );
         }
 
         return $this->_imageURLPath;
     }
 
+    /**
+     * @param string $text
+     */
     private function _setText(string $text): void
     {
         $this->_text = $text;
     }
 
+    /**
+     * @param string $hash
+     */
     private function _setHash(string $hash): void
     {
         $this->_hash = $hash;
     }
 
+    /**
+     * @param string $imageFileName
+     * @param ICaptchaSettings $captchaSettings
+     *
+     * @throws CaptchaEntityException
+     */
     private function _setImagePath(
         string           $imageFileName,
         ICaptchaSettings $captchaSettings
     ): void
     {
-        $imageDirectoryPath = $this->_createImageDerictory($captchaSettings);
+        $imageDirectoryPath = $this->_createImageDirectory($captchaSettings);
 
         $this->_imageFilePath = sprintf(
             '%s/img/%s/%s',
@@ -110,7 +163,14 @@ class CaptchaEntity implements ICaptchaEntity
         );
     }
 
-    private function _createImageDerictory(
+    /**
+     * @param ICaptchaSettings $captchaSettings
+     *
+     * @return string
+     *
+     * @throws CaptchaEntityException
+     */
+    private function _createImageDirectory(
         ICaptchaSettings $captchaSettings
     ): string
     {
@@ -137,13 +197,18 @@ class CaptchaEntity implements ICaptchaEntity
         if (!file_exists($directoryFullPath) || !is_dir($directoryFullPath)) {
             throw new CaptchaEntityException(
                 CaptchaEntityException::MESSAGE_ENTITY_CAN_NOT_CREATE_DIR,
-                CaptchaEntityException::CODE_ENTITY_CAN_NOT_CREATE_DIR
+                CaptchaException::CODE_ENTITY_CAN_NOT_CREATE_DIR
             );
         }
 
         return $directoryPath;
     }
 
+    /**
+     * @param string $imageFilePath
+     * @param string $imageDirectoryPath
+     * @param string $imageUrlTemplate
+     */
     private function _setImageUrlPath(
         string $imageFilePath,
         string $imageDirectoryPath,

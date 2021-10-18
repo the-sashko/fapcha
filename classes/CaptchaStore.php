@@ -1,82 +1,109 @@
 <?php
-namespace Core\Plugins\Captcha\Classes;
 
-use Core\Plugins\Captcha\Interfaces\ICaptchaStore;
+namespace Sonder\Plugins\Captcha\Classes;
 
-use Core\Plugins\Captcha\Exceptions\CaptchaStoreException;
+use Exception;
+use PDO;
+use Sonder\Plugins\Captcha\Exceptions\CaptchaException;
+use Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException;
+use Sonder\Plugins\Captcha\Interfaces\ICaptchaStore;
 
-class CaptchaStore implements ICaptchaStore
+final class CaptchaStore implements ICaptchaStore
 {
     const DATABASE_FILE_NAME = 'dictionaries.db';
 
     const TEMPORARY_DATABASE_FILE_NAME = 'dictionaries_tmp.db';
 
-    private $_dataFilePath = null;
+    /**
+     * @var string|null
+     */
+    private ?string $_dataFilePath = null;
 
-    private $_dbInstance = null;
+    /**
+     * @var PDO|null
+     */
+    private ?PDO $_dbInstance = null;
 
-    public function __construct(
-        ?string $dataDirPath  = null,
+    /**
+     * @param string|null $dataDirPath
+     * @param string|null $dataFileName
+     *
+     * @throws CaptchaStoreException
+     */
+    final public function __construct(
+        ?string $dataDirPath = null,
         ?string $dataFileName = null
     )
     {
         if (empty($dataDirPath)) {
             throw new CaptchaStoreException(
                 CaptchaStoreException::MESSAGE_STORE_DATA_DIR_PATH_IS_NOT_SET,
-                CaptchaStoreException::CODE_STORE_DATA_DIR_PATH_IS_NOT_SET
+                CaptchaException::CODE_STORE_DATA_DIR_PATH_IS_NOT_SET
             );
         }
 
         if (empty($dataFileName)) {
-            $dataFileName = static::DATABASE_FILE_NAME;
+            $dataFileName = CaptchaStore::DATABASE_FILE_NAME;
         }
 
         $this->_dataFilePath = sprintf('%s/%s', $dataDirPath, $dataFileName);
     }
 
-    public function __destruct()
+    final public function __destruct()
     {
         $this->_dbInstance = null;
     }
 
-    public function getRandomWord(?string $dictionary = null): ?string
+    /**
+     * @param string|null $dictionary
+     *
+     * @return string|null
+     *
+     * @throws CaptchaStoreException
+     */
+    final public function getRandomWord(?string $dictionary = null): ?string
     {
         if (empty($dictionary)) {
             throw new CaptchaStoreException(
                 CaptchaStoreException::MESSAGE_STORE_DICTIONARY_IS_NOT_SET,
-                CaptchaStoreException::CODE_STORE_DICTIONARY_IS_NOT_SET
+                CaptchaException::CODE_STORE_DICTIONARY_IS_NOT_SET
             );
         }
 
         $id = $this->_getRandomId($dictionary);
 
         if ($id < 0) {
-            $errorMessage = '%s. Table: %s';
-
             $errorMessage = sprintf(
+                '%s. Table: %s',
                 CaptchaStoreException::MESSAGE_STORE_TABLE_IS_EMPTY,
                 $dictionary
             );
 
             throw new CaptchaStoreException(
                 $errorMessage,
-                CaptchaStoreException::CODE_STORE_TABLE_IS_EMPTY
+                CaptchaException::CODE_STORE_TABLE_IS_EMPTY
             );
         }
 
         return $this->_getWord($dictionary, $id);
     }
 
-    public function createDictionary(?string $dictionary = null): void
+    /**
+     * @param string|null $dictionary
+     *
+     * @throws CaptchaStoreException
+     */
+    final public function createDictionary(?string $dictionary = null): void
     {
         if (empty($dictionary)) {
             throw new CaptchaStoreException(
                 CaptchaStoreException::MESSAGE_STORE_DICTIONARY_IS_NOT_SET,
-                CaptchaStoreException::CODE_STORE_DICTIONARY_IS_NOT_SET
+                CaptchaException::CODE_STORE_DICTIONARY_IS_NOT_SET
             );
         }
 
-        $sql = '
+        $sql = /** @lang SQLite */
+            '
             CREATE TABLE %s (
                 word TEXT PRIMARY KEY
             );
@@ -87,26 +114,33 @@ class CaptchaStore implements ICaptchaStore
         $this->_query($sql);
     }
 
-    public function insertWord(
-        ?string $word       = null,
+    /**
+     * @param string|null $word
+     * @param string|null $dictionary
+     *
+     * @throws CaptchaStoreException
+     */
+    final public function insertWord(
+        ?string $word = null,
         ?string $dictionary = null
     ): void
     {
         if (empty($word)) {
             throw new CaptchaStoreException(
                 CaptchaStoreException::MESSAGE_STORE_WORD_IS_NOT_SET,
-                CaptchaStoreException::CODE_STORE_WORD_IS_NOT_SET
+                CaptchaException::CODE_STORE_WORD_IS_NOT_SET
             );
         }
 
         if (empty($dictionary)) {
             throw new CaptchaStoreException(
                 CaptchaStoreException::MESSAGE_STORE_DICTIONARY_IS_NOT_SET,
-                CaptchaStoreException::CODE_STORE_DICTIONARY_IS_NOT_SET
+                CaptchaException::CODE_STORE_DICTIONARY_IS_NOT_SET
             );
         }
 
-        $sql = '
+        $sql = /** @lang SQLite */
+            '
             INSERT INTO %s (
                 word
             ) VALUES (
@@ -119,7 +153,10 @@ class CaptchaStore implements ICaptchaStore
         $this->_query($sql);
     }
 
-    public function createDatabase(): void
+    /**
+     * @throws CaptchaStoreException
+     */
+    final public function createDatabase(): void
     {
         try {
             if (
@@ -131,7 +168,7 @@ class CaptchaStore implements ICaptchaStore
 
             touch($this->_dataFilePath);
             chmod($this->_dataFilePath, 0775);
-        } catch (\Exception $exp) {
+        } catch (Exception $exp) {
             $errorMessage = '%s. Error: %s';
 
             $errorMessage = sprintf(
@@ -142,30 +179,37 @@ class CaptchaStore implements ICaptchaStore
 
             throw new CaptchaStoreException(
                 $errorMessage,
-                CaptchaStoreException::CODE_STORE_CAN_NOT_CREATE_DATABASE
+                CaptchaException::CODE_STORE_CAN_NOT_CREATE_DATABASE
             );
         }
     }
 
-    public function updateDatabase(?string $dataDirPath = null): bool
+    /**
+     * @param string|null $dataDirPath
+     *
+     * @return bool
+     *
+     * @throws CaptchaStoreException
+     */
+    final public function updateDatabase(?string $dataDirPath = null): bool
     {
         if (empty($dataDirPath)) {
             throw new CaptchaStoreException(
                 CaptchaStoreException::MESSAGE_STORE_DATA_DIR_PATH_IS_NOT_SET,
-                CaptchaStoreException::CODE_STORE_DATA_DIR_PATH_IS_NOT_SET
+                CaptchaException::CODE_STORE_DATA_DIR_PATH_IS_NOT_SET
             );
         }
 
         $oldDatabaseFilePath = sprintf(
             '%s/%s',
             $dataDirPath,
-            static::DATABASE_FILE_NAME
+            CaptchaStore::DATABASE_FILE_NAME
         );
 
         $newDatabaseFilePath = sprintf(
             '%s/%s',
             $dataDirPath,
-            static::TEMPORARY_DATABASE_FILE_NAME
+            CaptchaStore::TEMPORARY_DATABASE_FILE_NAME
         );
 
         if (
@@ -186,7 +230,7 @@ class CaptchaStore implements ICaptchaStore
             copy($newDatabaseFilePath, $oldDatabaseFilePath);
             chmod($oldDatabaseFilePath, 0775);
             unlink($newDatabaseFilePath);
-        } catch (\Exception $exp) {
+        } catch (Exception $exp) {
             $errorMessage = '%s. Error: %s';
 
             $errorMessage = sprintf(
@@ -197,13 +241,16 @@ class CaptchaStore implements ICaptchaStore
 
             throw new CaptchaStoreException(
                 $errorMessage,
-                CaptchaStoreException::CODE_STORE_CAN_NOT_UPDATE_DATABASE
+                CaptchaException::CODE_STORE_CAN_NOT_UPDATE_DATABASE
             );
         }
 
         return true;
     }
 
+    /**
+     * @throws CaptchaStoreException
+     */
     private function _initStore(): void
     {
         try {
@@ -214,7 +261,7 @@ class CaptchaStore implements ICaptchaStore
                 touch($this->_dataFilePath);
                 chmod($this->_dataFilePath, 0775);
             }
-        } catch (\Exception $exp) {
+        } catch (Exception $exp) {
             $errorMessage = '%s. Error: %s';
 
             $errorMessage = sprintf(
@@ -225,31 +272,45 @@ class CaptchaStore implements ICaptchaStore
 
             throw new CaptchaStoreException(
                 $errorMessage,
-                CaptchaStoreException::CODE_STORE_CAN_NOT_CREATE_DATABASE
+                CaptchaException::CODE_STORE_CAN_NOT_CREATE_DATABASE
             );
         }
 
         $dsn = sprintf('sqlite:%s', $this->_dataFilePath);
 
         $options = [
-            \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
-            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ];
 
-        $this->_dbInstance = new \PDO($dsn, null, null, $options);
+        $this->_dbInstance = new PDO($dsn, null, null, $options);
     }
 
+    /**
+     * @param string $dictionary
+     *
+     * @return int
+     *
+     * @throws CaptchaStoreException
+     */
     private function _getRandomId(string $dictionary): int
     {
         $countRows = $this->_countDictionaryRows($dictionary);
-        $randomId  = rand(1, $countRows);
 
-        return $randomId;
+        return rand(1, $countRows);
     }
 
+    /**
+     * @param string $dictionary
+     *
+     * @return int
+     *
+     * @throws CaptchaStoreException
+     */
     private function _countDictionaryRows(string $dictionary): int
     {
-        $sql = '
+        $sql = /** @lang SQLite */
+            '
             SELECT
                 COUNT(*) AS cnt
             FROM %s;
@@ -269,29 +330,38 @@ class CaptchaStore implements ICaptchaStore
 
         $count = $row['cnt'];
 
-        return (int) $count;
+        return (int)$count;
     }
 
+    /**
+     * @param string|null $dictionary
+     * @param int|null $id
+     *
+     * @return string|null
+     *
+     * @throws CaptchaStoreException
+     */
     private function _getWord(
         ?string $dictionary = null,
-        ?int    $id         = null
+        ?int    $id = null
     ): ?string
     {
         if (empty($dictionary)) {
             throw new CaptchaStoreException(
                 CaptchaStoreException::MESSAGE_STORE_DICTIONARY_IS_NOT_SET,
-                CaptchaStoreException::CODE_STORE_DICTIONARY_IS_NOT_SET
+                CaptchaException::CODE_STORE_DICTIONARY_IS_NOT_SET
             );
         }
 
         if (empty($id)) {
             throw new CaptchaStoreException(
                 CaptchaStoreException::MESSAGE_STORE_ID_IS_NOT_SET,
-                CaptchaStoreException::CODE_STORE_ID_IS_NOT_SET
+                CaptchaException::CODE_STORE_ID_IS_NOT_SET
             );
         }
 
-        $sql = '
+        $sql = /** @lang SQLite */
+            '
             SELECT
                 word
             FROM %s
@@ -312,12 +382,19 @@ class CaptchaStore implements ICaptchaStore
         return $row['word'];
     }
 
+    /**
+     * @param string|null $sql
+     *
+     * @return array|null
+     *
+     * @throws CaptchaStoreException
+     */
     private function _getRow(?string $sql = null): ?array
     {
         if (empty($sql)) {
             throw new CaptchaStoreException(
                 CaptchaStoreException::MESSAGE_STORE_SQL_IS_EMPTY,
-                CaptchaStoreException::CODE_STORE_SQL_IS_EMPTY
+                CaptchaException::CODE_STORE_SQL_IS_EMPTY
             );
         }
 
@@ -327,14 +404,14 @@ class CaptchaStore implements ICaptchaStore
             }
 
             $rows = $this->_dbInstance->query($sql);
-            $rows = (array) $rows->fetchALL();
+            $rows = (array)$rows->fetchALL();
 
             if (empty($rows)) {
                 return null;
             }
 
             return array_shift($rows);
-        } catch (\Exception $exp) {
+        } catch (Exception $exp) {
             $errorMessage = '%s. Query: %s. Error: %s';
 
             $errorMessage = sprintf(
@@ -346,17 +423,22 @@ class CaptchaStore implements ICaptchaStore
 
             throw new CaptchaStoreException(
                 $errorMessage,
-                CaptchaStoreException::CODE_STORE_QUERY_ERROR
+                CaptchaException::CODE_STORE_QUERY_ERROR
             );
         }
     }
 
-    private function _query(?string $sql = null): bool
+    /**
+     * @param string|null $sql
+     *
+     * @throws CaptchaStoreException
+     */
+    private function _query(?string $sql = null): void
     {
         if (empty($sql)) {
             throw new CaptchaStoreException(
                 CaptchaStoreException::MESSAGE_STORE_SQL_IS_EMPTY,
-                CaptchaStoreException::CODE_STORE_SQL_IS_EMPTY
+                CaptchaException::CODE_STORE_SQL_IS_EMPTY
             );
         }
 
@@ -365,8 +447,8 @@ class CaptchaStore implements ICaptchaStore
                 $this->_initStore();
             }
 
-            return (bool) $this->_dbInstance->query($sql);
-        } catch (\Exception $exp) {
+            $this->_dbInstance->query($sql);
+        } catch (Exception $exp) {
             $errorMessage = '%s. Query: %s. Error: %s';
 
             $errorMessage = sprintf(
@@ -378,7 +460,7 @@ class CaptchaStore implements ICaptchaStore
 
             throw new CaptchaStoreException(
                 $errorMessage,
-                CaptchaStoreException::CODE_STORE_QUERY_ERROR
+                CaptchaException::CODE_STORE_QUERY_ERROR
             );
         }
     }

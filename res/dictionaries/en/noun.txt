@@ -827,7 +827,6 @@ hips
 historian
 historians
 history
-hitler
 hive
 hole
 holes
@@ -867,7 +866,6 @@ idea
 idiot
 idiots
 idlers
-igniter
 illness
 illusion
 image

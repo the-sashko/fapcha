@@ -1,56 +1,39 @@
 <?php
-use Core\Plugins\Captcha\Classes\CaptchaEntity;
-use Core\Plugins\Captcha\Classes\CaptchaSettings;
-use Core\Plugins\Captcha\Classes\CaptchaImage;
 
-/**
- * Class For Testing CaptchaPlugin Image Class
- */
-class CaptchaImageTest extends CaptchaTest
+use Sonder\Plugins\Captcha\Classes\CaptchaEntity;
+use Sonder\Plugins\Captcha\Classes\CaptchaImage;
+use Sonder\Plugins\Captcha\Classes\CaptchaSettings;
+use Sonder\Plugins\Captcha\Exceptions\CaptchaEntityException;
+use Sonder\Plugins\Captcha\Exceptions\CaptchaImageException;
+use Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException;
+
+final class CaptchaImageTest extends CaptchaTest
 {
-    /**
-     * @var string Sample Data Directory Path For Unit Tests
-     */
-    const DATA_DIR_PATH = __DIR__.'/../tmp';
+    const DATA_DIR_PATH = __DIR__ . '/../tmp';
 
-    /**
-     * @var string Sample Captcha Text For Unit Tests
-     */
     const TEXT = 'foo bar';
 
-    /**
-     * @var string Sample Captcha Hash For Unit Tests
-     */
-    const HASH = '2918553c85b053da3f1bf4777fc64cca112e956eb1e8f3b627def9ab5dd'.
-                 '31ac8';
+    const HASH = '2918553c85b053da3f1bf4777fc64cca112e956eb1e8f3b627def9ab5dd' .
+    '31ac8';
 
-    /**
-     * @var string Sample Captcha Image File Name For Unit Tests
-     */
     const IMAGE_FILE_NAME = 'test.png';
 
-    /**
-     * @var int Sample Captcha Image Width For Unit Tests
-     */
     const IMAGE_WIDTH = 100;
 
-    /**
-     * @var int Sample Captcha Image Height For Unit Tests
-     */
     const IMAGE_HEIGHT = 100;
 
-    /**
-     * @var int Sample Captcha Image Dot Size For Unit Tests
-     */
     const DOT_SIZE = 10;
 
     /**
-     * Unit Test Of CaptchaImage create Method
+     * @throws CaptchaEntityException
+     * @throws CaptchaImageException
+     * @throws CaptchaSettingsException
+     * @throws ImagickException
      */
-    public function testCreate(): void
+    final public function testCreate(): void
     {
         $captchaEntity = $this->_getCaptchaEntityInstance();
-        $captchaImage  = new CaptchaImage();
+        $captchaImage = new CaptchaImage();
 
         $imageFilePath = $captchaEntity->getImageFilePath();
 
@@ -68,24 +51,14 @@ class CaptchaImageTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaImage _saveImage Method
+     * @throws ReflectionException
      */
-    public function testSaveImage(): void
+    final public function testSaveImage(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $saveImageMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_saveImage'
-        );
-
-        $createImageInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createImageInstance'
-        );
-
-        $saveImageMethod->setAccessible(true);
-        $createImageInstanceMethod->setAccessible(true);
+        $saveImageMethod = $this->_getReflectionMethod('_saveImage');
+        $createImageInstanceMethod = $this->_getReflectionMethod('_createImageInstance');
 
         $exception = null;
 
@@ -93,14 +66,14 @@ class CaptchaImageTest extends CaptchaTest
             $saveImageMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
 
         $this->assertNotEmpty($exception);
 
-        $imageFilePath = static::DATA_DIR_PATH.'/'.static::IMAGE_FILE_NAME;
+        $imageFilePath = CaptchaImageTest::DATA_DIR_PATH . '/' . CaptchaImageTest::IMAGE_FILE_NAME;
 
         $exception = null;
 
@@ -108,7 +81,7 @@ class CaptchaImageTest extends CaptchaTest
             $saveImageMethod->invokeArgs($captchaImage, [$imageFilePath]);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -117,31 +90,21 @@ class CaptchaImageTest extends CaptchaTest
 
         $createImageInstanceMethod->invokeArgs(
             $captchaImage,
-            [mb_strlen(static::TEXT)]
+            [mb_strlen(CaptchaImageTest::TEXT)]
         );
 
         $saveImageMethod->invokeArgs($captchaImage, [$imageFilePath]);
     }
 
     /**
-     * Unit Test Of CaptchaImage _setImageFormat Method
+     * @throws ReflectionException
      */
-    public function testSetImageFormat(): void
+    final public function testSetImageFormat(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $setImageFormatMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_setImageFormat'
-        );
-
-        $createImageInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createImageInstance'
-        );
-
-        $setImageFormatMethod->setAccessible(true);
-        $createImageInstanceMethod->setAccessible(true);
+        $setImageFormatMethod = $this->_getReflectionMethod('_setImageFormat');
+        $createImageInstanceMethod = $this->_getReflectionMethod('_createImageInstance');
 
         $exception = null;
 
@@ -149,7 +112,7 @@ class CaptchaImageTest extends CaptchaTest
             $setImageFormatMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -158,37 +121,22 @@ class CaptchaImageTest extends CaptchaTest
 
         $createImageInstanceMethod->invokeArgs(
             $captchaImage,
-            [mb_strlen(static::TEXT)]
+            [mb_strlen(CaptchaImageTest::TEXT)]
         );
 
         $setImageFormatMethod->invoke($captchaImage);
     }
 
     /**
-     * Unit Test Of CaptchaImage _gdPostProcessing Method
+     * @throws ReflectionException
      */
-    public function testGdPostProcessing(): void
+    final public function testGdPostProcessing(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $gdPostProcessingMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_gdPostProcessing'
-        );
-
-        $createImageInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createImageInstance'
-        );
-
-        $setImageFormatMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_setImageFormat'
-        );
-
-        $gdPostProcessingMethod->setAccessible(true);
-        $createImageInstanceMethod->setAccessible(true);
-        $setImageFormatMethod->setAccessible(true);
+        $gdPostProcessingMethod = $this->_getReflectionMethod('_gdPostProcessing');
+        $createImageInstanceMethod = $this->_getReflectionMethod('_createImageInstance');
+        $setImageFormatMethod = $this->_getReflectionMethod('_setImageFormat');
 
         $exception = null;
 
@@ -196,7 +144,7 @@ class CaptchaImageTest extends CaptchaTest
             $gdPostProcessingMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -205,7 +153,7 @@ class CaptchaImageTest extends CaptchaTest
 
         $createImageInstanceMethod->invokeArgs(
             $captchaImage,
-            [mb_strlen(static::TEXT)]
+            [mb_strlen(CaptchaImageTest::TEXT)]
         );
 
         $exception = null;
@@ -224,24 +172,14 @@ class CaptchaImageTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaImage _resizeImage Method
+     * @throws ReflectionException
      */
-    public function testResizeImage(): void
+    final public function testResizeImage(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $resizeImageMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_resizeImage'
-        );
-
-        $createImageInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createImageInstance'
-        );
-
-        $resizeImageMethod->setAccessible(true);
-        $createImageInstanceMethod->setAccessible(true);
+        $resizeImageMethod = $this->_getReflectionMethod('_resizeImage');
+        $createImageInstanceMethod = $this->_getReflectionMethod('_createImageInstance');
 
         $exception = null;
 
@@ -249,7 +187,7 @@ class CaptchaImageTest extends CaptchaTest
             $resizeImageMethod->invokeArgs($captchaImage, [null, null]);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -262,13 +200,13 @@ class CaptchaImageTest extends CaptchaTest
             $resizeImageMethod->invokeArgs(
                 $captchaImage,
                 [
-                    static::IMAGE_WIDTH,
-                    static::IMAGE_HEIGHT
+                    CaptchaImageTest::IMAGE_WIDTH,
+                    CaptchaImageTest::IMAGE_HEIGHT
                 ]
             );
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -277,37 +215,27 @@ class CaptchaImageTest extends CaptchaTest
 
         $createImageInstanceMethod->invokeArgs(
             $captchaImage,
-            [mb_strlen(static::TEXT)]
+            [mb_strlen(CaptchaImageTest::TEXT)]
         );
 
         $resizeImageMethod->invokeArgs(
             $captchaImage,
             [
-                static::IMAGE_WIDTH,
-                static::IMAGE_HEIGHT
+                CaptchaImageTest::IMAGE_WIDTH,
+                CaptchaImageTest::IMAGE_HEIGHT
             ]
         );
     }
 
     /**
-     * Unit Test Of CaptchaImage _setFilters Method
+     * @throws ReflectionException
      */
-    public function testSetFilters(): void
+    final public function testSetFilters(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $setFiltersMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_setFilters'
-        );
-
-        $createImageInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createImageInstance'
-        );
-
-        $setFiltersMethod->setAccessible(true);
-        $createImageInstanceMethod->setAccessible(true);
+        $setFiltersMethod = $this->_getReflectionMethod('_setFilters');
+        $createImageInstanceMethod = $this->_getReflectionMethod('_createImageInstance');
 
         $exception = null;
 
@@ -315,7 +243,7 @@ class CaptchaImageTest extends CaptchaTest
             $setFiltersMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -324,31 +252,21 @@ class CaptchaImageTest extends CaptchaTest
 
         $createImageInstanceMethod->invokeArgs(
             $captchaImage,
-            [mb_strlen(static::TEXT)]
+            [mb_strlen(CaptchaImageTest::TEXT)]
         );
 
         $setFiltersMethod->invoke($captchaImage);
     }
 
     /**
-     * Unit Test Of CaptchaImage _setBrightnessAndContrast Method
+     * @throws ReflectionException
      */
-    public function testSetBrightnessAndContrast(): void
+    final public function testSetBrightnessAndContrast(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $setBrightnessAndContrastMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_setBrightnessAndContrast'
-        );
-
-        $createImageInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createImageInstance'
-        );
-
-        $setBrightnessAndContrastMethod->setAccessible(true);
-        $createImageInstanceMethod->setAccessible(true);
+        $setBrightnessAndContrastMethod = $this->_getReflectionMethod('_setBrightnessAndContrast');
+        $createImageInstanceMethod = $this->_getReflectionMethod('_createImageInstance');
 
         $exception = null;
 
@@ -356,7 +274,7 @@ class CaptchaImageTest extends CaptchaTest
             $setBrightnessAndContrastMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -365,31 +283,21 @@ class CaptchaImageTest extends CaptchaTest
 
         $createImageInstanceMethod->invokeArgs(
             $captchaImage,
-            [mb_strlen(static::TEXT)]
+            [mb_strlen(CaptchaImageTest::TEXT)]
         );
 
         $setBrightnessAndContrastMethod->invoke($captchaImage);
     }
 
     /**
-     * Unit Test Of CaptchaImage _resizeImageForFilters Method
+     * @throws ReflectionException
      */
-    public function testResizeImageForFilters(): void
+    final public function testResizeImageForFilters(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $resizeImageForFiltersMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_resizeImageForFilters'
-        );
-
-        $createImageInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createImageInstance'
-        );
-
-        $resizeImageForFiltersMethod->setAccessible(true);
-        $createImageInstanceMethod->setAccessible(true);
+        $resizeImageForFiltersMethod = $this->_getReflectionMethod('_resizeImageForFilters');
+        $createImageInstanceMethod = $this->_getReflectionMethod('_createImageInstance');
 
         $exception = null;
 
@@ -397,7 +305,7 @@ class CaptchaImageTest extends CaptchaTest
             $resizeImageForFiltersMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -406,31 +314,21 @@ class CaptchaImageTest extends CaptchaTest
 
         $createImageInstanceMethod->invokeArgs(
             $captchaImage,
-            [mb_strlen(static::TEXT)]
+            [mb_strlen(CaptchaImageTest::TEXT)]
         );
 
         $resizeImageForFiltersMethod->invoke($captchaImage);
     }
 
     /**
-     * Unit Test Of CaptchaImage _setBlurFilters Method
+     * @throws ReflectionException
      */
-    public function testSetBlurFilters(): void
+    final public function testSetBlurFilters(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $setBlurFiltersMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_setBlurFilters'
-        );
-
-        $createImageInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createImageInstance'
-        );
-
-        $setBlurFiltersMethod->setAccessible(true);
-        $createImageInstanceMethod->setAccessible(true);
+        $setBlurFiltersMethod = $this->_getReflectionMethod('_setBlurFilters');
+        $createImageInstanceMethod = $this->_getReflectionMethod('_createImageInstance');
 
         $exception = null;
 
@@ -438,7 +336,7 @@ class CaptchaImageTest extends CaptchaTest
             $setBlurFiltersMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -447,31 +345,21 @@ class CaptchaImageTest extends CaptchaTest
 
         $createImageInstanceMethod->invokeArgs(
             $captchaImage,
-            [mb_strlen(static::TEXT)]
+            [mb_strlen(CaptchaImageTest::TEXT)]
         );
 
         $setBlurFiltersMethod->invoke($captchaImage);
     }
 
     /**
-     * Unit Test Of CaptchaImage _posterizeImage Method
+     * @throws ReflectionException
      */
-    public function testPosterizeImage(): void
+    final public function testPosterizeImage(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $posterizeImageMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_posterizeImage'
-        );
-
-        $createImageInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createImageInstance'
-        );
-
-        $posterizeImageMethod->setAccessible(true);
-        $createImageInstanceMethod->setAccessible(true);
+        $posterizeImageMethod = $this->_getReflectionMethod('_posterizeImage');
+        $createImageInstanceMethod = $this->_getReflectionMethod('_createImageInstance');
 
         $exception = null;
 
@@ -479,7 +367,7 @@ class CaptchaImageTest extends CaptchaTest
             $posterizeImageMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -488,31 +376,21 @@ class CaptchaImageTest extends CaptchaTest
 
         $createImageInstanceMethod->invokeArgs(
             $captchaImage,
-            [mb_strlen(static::TEXT)]
+            [mb_strlen(CaptchaImageTest::TEXT)]
         );
 
         $posterizeImageMethod->invoke($captchaImage);
     }
 
     /**
-     * Unit Test Of CaptchaImage _setResizeFilters Method
+     * @throws ReflectionException
      */
-    public function testSetResizeFilters(): void
+    final public function testSetResizeFilters(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $setResizeFiltersMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_setResizeFilters'
-        );
-
-        $createImageInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createImageInstance'
-        );
-
-        $setResizeFiltersMethod->setAccessible(true);
-        $createImageInstanceMethod->setAccessible(true);
+        $setResizeFiltersMethod = $this->_getReflectionMethod('_setResizeFilters');
+        $createImageInstanceMethod = $this->_getReflectionMethod('_createImageInstance');
 
         $exception = null;
 
@@ -520,7 +398,7 @@ class CaptchaImageTest extends CaptchaTest
             $setResizeFiltersMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -529,31 +407,21 @@ class CaptchaImageTest extends CaptchaTest
 
         $createImageInstanceMethod->invokeArgs(
             $captchaImage,
-            [mb_strlen(static::TEXT)]
+            [mb_strlen(CaptchaImageTest::TEXT)]
         );
 
         $setResizeFiltersMethod->invoke($captchaImage);
     }
 
     /**
-     * Unit Test Of CaptchaImage _drawDots Method
+     * @throws ReflectionException
      */
-    public function testDrawDots(): void
+    final public function testDrawDots(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $drawDotsMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_drawDots'
-        );
-
-        $createDrawInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createDrawInstance'
-        );
-
-        $drawDotsMethod->setAccessible(true);
-        $createDrawInstanceMethod->setAccessible(true);
+        $drawDotsMethod = $this->_getReflectionMethod('_drawDots');
+        $createDrawInstanceMethod = $this->_getReflectionMethod('_createDrawInstance');
 
         $exception = null;
 
@@ -561,7 +429,7 @@ class CaptchaImageTest extends CaptchaTest
             $drawDotsMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -574,24 +442,14 @@ class CaptchaImageTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaImage _drawBigDots Method
+     * @throws ReflectionException
      */
-    public function testDrawBigDots(): void
+    final public function testDrawBigDots(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $drawBigDotsMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_drawBigDots'
-        );
-
-        $createDrawInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createDrawInstance'
-        );
-
-        $drawBigDotsMethod->setAccessible(true);
-        $createDrawInstanceMethod->setAccessible(true);
+        $drawBigDotsMethod = $this->_getReflectionMethod('_drawBigDots');
+        $createDrawInstanceMethod = $this->_getReflectionMethod('_createDrawInstance');
 
         $exception = null;
 
@@ -599,7 +457,7 @@ class CaptchaImageTest extends CaptchaTest
             $drawBigDotsMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -612,24 +470,14 @@ class CaptchaImageTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaImage _drawMiddleDots Method
+     * @throws ReflectionException
      */
-    public function testDrawMiddleDots(): void
+    final public function testDrawMiddleDots(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $drawMiddleDotsMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_drawMiddleDots'
-        );
-
-        $createDrawInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createDrawInstance'
-        );
-
-        $drawMiddleDotsMethod->setAccessible(true);
-        $createDrawInstanceMethod->setAccessible(true);
+        $drawMiddleDotsMethod = $this->_getReflectionMethod('_drawMiddleDots');
+        $createDrawInstanceMethod = $this->_getReflectionMethod('_createDrawInstance');
 
         $exception = null;
 
@@ -637,7 +485,7 @@ class CaptchaImageTest extends CaptchaTest
             $drawMiddleDotsMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -650,24 +498,14 @@ class CaptchaImageTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaImage _drawSmallDots Method
+     * @throws ReflectionException
      */
-    public function testDrawSmallDots(): void
+    final public function testDrawSmallDots(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $drawSmallDotsMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_drawSmallDots'
-        );
-
-        $createDrawInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createDrawInstance'
-        );
-
-        $drawSmallDotsMethod->setAccessible(true);
-        $createDrawInstanceMethod->setAccessible(true);
+        $drawSmallDotsMethod = $this->_getReflectionMethod('_drawSmallDots');
+        $createDrawInstanceMethod = $this->_getReflectionMethod('_createDrawInstance');
 
         $exception = null;
 
@@ -675,7 +513,7 @@ class CaptchaImageTest extends CaptchaTest
             $drawSmallDotsMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -688,32 +526,25 @@ class CaptchaImageTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaImage _drawDot Method
+     * @throws ReflectionException
      */
-    public function testDrawDot(): void
+    final public function testDrawDot(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $drawDotMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_drawDot'
-        );
-
-        $createDrawInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createDrawInstance'
-        );
-
-        $drawDotMethod->setAccessible(true);
-        $createDrawInstanceMethod->setAccessible(true);
+        $createDrawInstanceMethod = $this->_getReflectionMethod('_createDrawInstance');
+        $drawDotMethod = $this->_getReflectionMethod('_drawDot');
 
         $exception = null;
 
         try {
-            $drawDotMethod->invoke($captchaImage);
+            $drawDotMethod->invokeArgs(
+                $captchaImage,
+                [CaptchaImageTest::DOT_SIZE]
+            );
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -723,13 +554,10 @@ class CaptchaImageTest extends CaptchaTest
         $exception = null;
 
         try {
-            $drawDotMethod->invokeArgs(
-                $captchaImage,
-                [static::DOT_SIZE]
-            );
+            $drawDotMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -738,28 +566,18 @@ class CaptchaImageTest extends CaptchaTest
 
         $createDrawInstanceMethod->invoke($captchaImage);
 
-        $drawDotMethod->invokeArgs($captchaImage, [static::DOT_SIZE]);
+        $drawDotMethod->invokeArgs($captchaImage, [CaptchaImageTest::DOT_SIZE]);
     }
 
     /**
-     * Unit Test Of CaptchaImage _drawLines Method
+     * @throws ReflectionException
      */
-    public function testDrawLines(): void
+    final public function testDrawLines(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $drawLinesMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_drawLines'
-        );
-
-        $createDrawInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createDrawInstance'
-        );
-
-        $drawLinesMethod->setAccessible(true);
-        $createDrawInstanceMethod->setAccessible(true);
+        $drawLinesMethod = $this->_getReflectionMethod('_drawLines');
+        $createDrawInstanceMethod = $this->_getReflectionMethod('_createDrawInstance');
 
         $exception = null;
 
@@ -767,7 +585,7 @@ class CaptchaImageTest extends CaptchaTest
             $drawLinesMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -780,24 +598,14 @@ class CaptchaImageTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaImage _drawLine Method
+     * @throws ReflectionException
      */
-    public function testDrawLine(): void
+    final public function testDrawLine(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $drawLineMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_drawLine'
-        );
-
-        $createDrawInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createDrawInstance'
-        );
-
-        $drawLineMethod->setAccessible(true);
-        $createDrawInstanceMethod->setAccessible(true);
+        $drawLineMethod = $this->_getReflectionMethod('_writeText');
+        $createDrawInstanceMethod = $this->_getReflectionMethod('_createDrawInstance');
 
         $exception = null;
 
@@ -805,7 +613,7 @@ class CaptchaImageTest extends CaptchaTest
             $drawLineMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -818,30 +626,15 @@ class CaptchaImageTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaImage _writeText Method
+     * @throws ReflectionException
      */
-    public function testWriteText(): void
+    final public function testWriteText(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $writeTextMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_writeText'
-        );
-
-        $createImageInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createImageInstance'
-        );
-
-        $createDrawInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createDrawInstance'
-        );
-
-        $writeTextMethod->setAccessible(true);
-        $createImageInstanceMethod->setAccessible(true);
-        $createDrawInstanceMethod->setAccessible(true);
+        $writeTextMethod = $this->_getReflectionMethod('_writeText');
+        $createImageInstanceMethod = $this->_getReflectionMethod('_createImageInstance');
+        $createDrawInstanceMethod = $this->_getReflectionMethod('_createDrawInstance');
 
         $exception = null;
 
@@ -849,7 +642,7 @@ class CaptchaImageTest extends CaptchaTest
             $writeTextMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -859,10 +652,10 @@ class CaptchaImageTest extends CaptchaTest
         $exception = null;
 
         try {
-            $writeTextMethod->invokeArgs($captchaImage, [static::TEXT]);
+            $writeTextMethod->invokeArgs($captchaImage, [CaptchaImageTest::TEXT]);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -871,16 +664,16 @@ class CaptchaImageTest extends CaptchaTest
 
         $createImageInstanceMethod->invokeArgs(
             $captchaImage,
-            [mb_strlen(static::TEXT)]
+            [mb_strlen(CaptchaImageTest::TEXT)]
         );
 
         $exception = null;
 
         try {
-            $writeTextMethod->invokeArgs($captchaImage, [static::TEXT]);
+            $writeTextMethod->invokeArgs($captchaImage, [CaptchaImageTest::TEXT]);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -889,22 +682,18 @@ class CaptchaImageTest extends CaptchaTest
 
         $createDrawInstanceMethod->invoke($captchaImage);
 
-        $writeTextMethod->invokeArgs($captchaImage, [static::TEXT]);
+        $writeTextMethod->invokeArgs($captchaImage, [CaptchaImageTest::TEXT]);
     }
 
     /**
-     * Unit Test Of CaptchaImage _createImageInstance Method
+     * @throws ReflectionException
      */
-    public function testCreateImageInstance(): void
+    final public function testCreateImageInstance(): void
     {
         $captchaImage = new CaptchaImage();
 
-        $createImageInstanceMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaImage',
-            '_createImageInstance'
-        );
 
-        $createImageInstanceMethod->setAccessible(true);
+        $createImageInstanceMethod = $this->_getReflectionMethod('_createImageInstance');
 
         $exception = null;
 
@@ -912,7 +701,7 @@ class CaptchaImageTest extends CaptchaTest
             $createImageInstanceMethod->invoke($captchaImage);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaImageException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
             );
         }
@@ -921,21 +710,41 @@ class CaptchaImageTest extends CaptchaTest
 
         $createImageInstanceMethod->invokeArgs(
             $captchaImage,
-            [mb_strlen(static::TEXT)]
+            [mb_strlen(CaptchaImageTest::TEXT)]
         );
     }
 
+    /**
+     * @return CaptchaEntity
+     * @throws CaptchaEntityException
+     * @throws CaptchaSettingsException
+     */
     private function _getCaptchaEntityInstance(): CaptchaEntity
     {
         $captchaSettings = new CaptchaSettings($this->getSettingsData());
 
-        $captchaEntity = new CaptchaEntity(
-            static::TEXT,
-            static::HASH,
-            static::IMAGE_FILE_NAME,
+        return new CaptchaEntity(
+            CaptchaImageTest::TEXT,
+            CaptchaImageTest::HASH,
+            CaptchaImageTest::IMAGE_FILE_NAME,
             $captchaSettings
         );
+    }
 
-        return $captchaEntity;
+    /**
+     * @param string $methodName
+     * @return ReflectionMethod
+     * @throws ReflectionException
+     */
+    private function _getReflectionMethod(string $methodName): ReflectionMethod
+    {
+        $methodInstance = new ReflectionMethod(
+            'Sonder\Plugins\Captcha\Classes\CaptchaImage',
+            $methodName
+        );
+
+        $methodInstance->setAccessible(true);
+
+        return $methodInstance;
     }
 }

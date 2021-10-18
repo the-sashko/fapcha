@@ -1,56 +1,27 @@
 <?php
-use Core\Plugins\Captcha\Interfaces\ICaptchaStore;
 
-use Core\Plugins\Captcha\Classes\CaptchaStore;
+use Sonder\Plugins\Captcha\Classes\CaptchaStore;
+use Sonder\Plugins\Captcha\Interfaces\ICaptchaStore;
 
-/**
- * Class For Testing CaptchaPlugin Store Class
- */
-class CaptchaStoreTest extends CaptchaTest
+final class CaptchaStoreTest extends CaptchaTest
 {
-    /**
-     * @var string Sample Data Directory Path For Unit Tests
-     */
-    const DATA_DIR_PATH = __DIR__.'/../tmp';
+    const DATA_DIR_PATH = __DIR__ . '/../tmp';
 
-    /**
-     * @var string Sample Database File Name For Unit Tests
-     */
     const DATABASE_FILE_NAME = 'dictionaries.db';
 
-    /**
-     * @var string Sample Captcha Dictionary Of Adjectives For Unit Tests
-     */
     const DICTIONARY_ADJECTIVE = 'test_adjective_male';
 
-    /**
-     * @var string Sample Captcha Dictionary Of Nouns For Unit Tests
-     */
     const DICTIONARY_NOUN = 'test_noun_male';
-    /**
-     * @var string Sample Captcha Adjective Word For Unit Tests
-     */
+
     const WORD_ADJECTIVE = 'foo';
 
-    /**
-     * @var string Sample Captcha Noun Word For Unit Tests
-     */
     const WORD_NOUN = 'bar';
 
-    /**
-     * @var int Sample Count Of Words For Unit Tests
-     */
     const COUNT_WORDS = 1;
 
-    /**
-     * @var string Sample Captcha Text For Unit Tests
-     */
     const TEXT = 'foo bar';
 
-    /**
-     * Unit Test Of CaptchaStore getRandomWord Method
-     */
-    public function testGetRandomWord(): void
+    final public function testGetRandomWord(): void
     {
         $captchaStore = $this->_getCaptchaStoreInstance();
 
@@ -60,7 +31,7 @@ class CaptchaStoreTest extends CaptchaTest
             $captchaStore->getRandomWord();
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaStoreException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException',
                 $exception
             );
         }
@@ -68,35 +39,35 @@ class CaptchaStoreTest extends CaptchaTest
         $this->assertNotEmpty($exception);
 
         $adjective = $captchaStore->getRandomWord(
-            static::DICTIONARY_ADJECTIVE
+            CaptchaStoreTest::DICTIONARY_ADJECTIVE
         );
 
-        $this->assertEquals($adjective, static::WORD_ADJECTIVE);
+        $this->assertEquals(CaptchaStoreTest::WORD_ADJECTIVE, $adjective);
 
-        $noun = $captchaStore->getRandomWord(static::DICTIONARY_NOUN);
+        $noun = $captchaStore->getRandomWord(CaptchaStoreTest::DICTIONARY_NOUN);
 
-        $this->assertEquals($noun, static::WORD_NOUN);
+        $this->assertEquals(CaptchaStoreTest::WORD_NOUN, $noun);
     }
 
     /**
-     * Unit Test Of CaptchaStore createDictionary Method
+     * @throws ReflectionException
      */
-    public function testCreateDictionary(): void
+    final public function testCreateDictionary(): void
     {
         $captchaStore = $this->_getCaptchaStoreInstance();
 
         $queryMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaStore',
+            'Sonder\Plugins\Captcha\Classes\CaptchaStore',
             '_query'
         );
 
         $queryMethod->setAccessible(true);
 
         $sql = 'DROP TABLE %s;';
-        $sql = sprintf($sql, static::DICTIONARY_ADJECTIVE);
+        $sql = sprintf($sql, CaptchaStoreTest::DICTIONARY_ADJECTIVE);
         $queryMethod->invokeArgs($captchaStore, [$sql]);
 
-        $captchaStore->createDictionary(static::DICTIONARY_ADJECTIVE);
+        $captchaStore->createDictionary(CaptchaStoreTest::DICTIONARY_ADJECTIVE);
 
         $exception = null;
 
@@ -104,7 +75,7 @@ class CaptchaStoreTest extends CaptchaTest
             $captchaStore->createDictionary();
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaStoreException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException',
                 $exception
             );
         }
@@ -115,14 +86,14 @@ class CaptchaStoreTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaText insertWord Method
+     * @throws ReflectionException
      */
-    public function testInsertWord(): void
+    final public function testInsertWord(): void
     {
         $captchaStore = $this->_getCaptchaStoreInstance();
 
         $queryMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaStore',
+            'Sonder\Plugins\Captcha\Classes\CaptchaStore',
             '_query'
         );
 
@@ -134,7 +105,7 @@ class CaptchaStoreTest extends CaptchaTest
             $captchaStore->insertWord();
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaStoreException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException',
                 $exception
             );
         }
@@ -144,10 +115,10 @@ class CaptchaStoreTest extends CaptchaTest
         $exception = null;
 
         try {
-            $captchaStore->insertWord(static::WORD_ADJECTIVE);
+            $captchaStore->insertWord(CaptchaStoreTest::WORD_ADJECTIVE);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaStoreException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException',
                 $exception
             );
         }
@@ -155,23 +126,20 @@ class CaptchaStoreTest extends CaptchaTest
         $this->assertNotEmpty($exception);
 
         $sql = 'DELETE FROM %s;';
-        $sql = sprintf($sql, static::DICTIONARY_ADJECTIVE);
+        $sql = sprintf($sql, CaptchaStoreTest::DICTIONARY_ADJECTIVE);
         $queryMethod->invokeArgs($captchaStore, [$sql]);
 
         $captchaStore->insertWord(
-            static::WORD_ADJECTIVE,
-            static::DICTIONARY_ADJECTIVE
+            CaptchaStoreTest::WORD_ADJECTIVE,
+            CaptchaStoreTest::DICTIONARY_ADJECTIVE
         );
 
-        $word = $captchaStore->getRandomWord(static::DICTIONARY_ADJECTIVE);
+        $word = $captchaStore->getRandomWord(CaptchaStoreTest::DICTIONARY_ADJECTIVE);
 
-        $this->assertEquals($word, static::WORD_ADJECTIVE);
+        $this->assertEquals(CaptchaStoreTest::WORD_ADJECTIVE, $word);
     }
 
-    /**
-     * Unit Test Of CaptchaStore updateDatabase Method
-     */
-    public function testUpdateDatabase(): void
+    final public function testUpdateDatabase(): void
     {
         $captchaStore = $this->_getCaptchaStoreInstance();
 
@@ -181,25 +149,25 @@ class CaptchaStoreTest extends CaptchaTest
             $captchaStore->updateDatabase();
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaStoreException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException',
                 $exception
             );
         }
 
         $this->assertNotEmpty($exception);
 
-        $captchaStore->updateDatabase(static::DATA_DIR_PATH);
+        $captchaStore->updateDatabase(CaptchaStoreTest::DATA_DIR_PATH);
     }
 
     /**
-     * Unit Test Of CaptchaStore _getRandomId Method
+     * @throws ReflectionException
      */
-    public function testGetRandomId(): void
+    final public function testGetRandomId(): void
     {
         $captchaStore = $this->_getCaptchaStoreInstance();
 
         $getRandomIdMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaStore',
+            'Sonder\Plugins\Captcha\Classes\CaptchaStore',
             '_getRandomId'
         );
 
@@ -207,28 +175,28 @@ class CaptchaStoreTest extends CaptchaTest
 
         $randomId = $getRandomIdMethod->invokeArgs(
             $captchaStore,
-            [static::DICTIONARY_ADJECTIVE]
+            [CaptchaStoreTest::DICTIONARY_ADJECTIVE]
         );
 
-        $this->assertEquals($randomId, static::COUNT_WORDS);
+        $this->assertEquals(CaptchaStoreTest::COUNT_WORDS, $randomId);
 
         $randomId = $getRandomIdMethod->invokeArgs(
             $captchaStore,
-            [static::DICTIONARY_NOUN]
+            [CaptchaStoreTest::DICTIONARY_NOUN]
         );
 
-        $this->assertEquals($randomId, static::COUNT_WORDS);
+        $this->assertEquals(CaptchaStoreTest::COUNT_WORDS, $randomId);
     }
 
     /**
-     * Unit Test Of CaptchaStore _countDictionaryRows Method
+     * @throws ReflectionException
      */
-    public function testCountDictionaryRows(): void
+    final public function testCountDictionaryRows(): void
     {
         $captchaStore = $this->_getCaptchaStoreInstance();
 
         $countDictionaryRowsMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaStore',
+            'Sonder\Plugins\Captcha\Classes\CaptchaStore',
             '_countDictionaryRows'
         );
 
@@ -236,28 +204,28 @@ class CaptchaStoreTest extends CaptchaTest
 
         $countDictionaryRows = $countDictionaryRowsMethod->invokeArgs(
             $captchaStore,
-            [static::DICTIONARY_ADJECTIVE]
+            [CaptchaStoreTest::DICTIONARY_ADJECTIVE]
         );
 
-        $this->assertEquals($countDictionaryRows, static::COUNT_WORDS);
+        $this->assertEquals(CaptchaStoreTest::COUNT_WORDS, $countDictionaryRows);
 
         $countDictionaryRows = $countDictionaryRowsMethod->invokeArgs(
             $captchaStore,
-            [static::DICTIONARY_NOUN]
+            [CaptchaStoreTest::DICTIONARY_NOUN]
         );
 
-        $this->assertEquals($countDictionaryRows, static::COUNT_WORDS);
+        $this->assertEquals(CaptchaStoreTest::COUNT_WORDS, $countDictionaryRows);
     }
 
     /**
-     * Unit Test Of CaptchaStore _getWord Method
+     * @throws ReflectionException
      */
-    public function testGetWord(): void
+    final public function testGetWord(): void
     {
         $captchaStore = $this->_getCaptchaStoreInstance();
 
         $getWordMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaStore',
+            'Sonder\Plugins\Captcha\Classes\CaptchaStore',
             '_getWord'
         );
 
@@ -269,7 +237,7 @@ class CaptchaStoreTest extends CaptchaTest
             $getWordMethod->invoke($captchaStore);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaStoreException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException',
                 $exception
             );
         }
@@ -281,11 +249,11 @@ class CaptchaStoreTest extends CaptchaTest
         try {
             $getWordMethod->invokeArgs(
                 $captchaStore,
-                [static::DICTIONARY_ADJECTIVE]
+                [CaptchaStoreTest::DICTIONARY_ADJECTIVE]
             );
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaStoreException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException',
                 $exception
             );
         }
@@ -295,33 +263,33 @@ class CaptchaStoreTest extends CaptchaTest
         $this->assertEmpty($getWordMethod->invokeArgs(
             $captchaStore,
             [
-                static::DICTIONARY_ADJECTIVE,
-                static::COUNT_WORDS + 1
+                CaptchaStoreTest::DICTIONARY_ADJECTIVE,
+                CaptchaStoreTest::COUNT_WORDS + 1
             ]
         ));
 
         $word = $getWordMethod->invokeArgs(
             $captchaStore,
             [
-                static::DICTIONARY_ADJECTIVE,
-                static::COUNT_WORDS
+                CaptchaStoreTest::DICTIONARY_ADJECTIVE,
+                CaptchaStoreTest::COUNT_WORDS
             ]
         );
 
         $this->assertNotEmpty($word);
 
-        $this->assertEquals($word, static::WORD_ADJECTIVE);
+        $this->assertEquals(CaptchaStoreTest::WORD_ADJECTIVE, $word);
     }
 
     /**
-     * Unit Test Of CaptchaStore _getRow Method
+     * @throws ReflectionException
      */
-    public function testGetRow(): void
+    final public function testGetRow(): void
     {
         $captchaStore = $this->_getCaptchaStoreInstance();
 
         $getRowMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaStore',
+            'Sonder\Plugins\Captcha\Classes\CaptchaStore',
             '_getRow'
         );
 
@@ -336,48 +304,51 @@ class CaptchaStoreTest extends CaptchaTest
 
         $sql = sprintf(
             $sql,
-            static::DICTIONARY_ADJECTIVE,
-            static::COUNT_WORDS
+            CaptchaStoreTest::DICTIONARY_ADJECTIVE,
+            CaptchaStoreTest::COUNT_WORDS
         );
 
         $row = $getRowMethod->invokeArgs($captchaStore, [$sql]);
 
         $this->assertNotEmpty($row);
 
-        $this->assertTrue(array_key_exists('word', $row));
+        $this->assertArrayHasKey('word', $row);
 
-        $this->assertEquals($row['word'], static::WORD_ADJECTIVE);
+        $this->assertEquals(CaptchaStoreTest::WORD_ADJECTIVE, $row['word']);
     }
 
     /**
-     * Unit Test Of CaptchaStore _query Method
+     * @throws ReflectionException
      */
-    public function testQuery(): void
+    final public function testQuery(): void
     {
         $captchaStore = $this->_getCaptchaStoreInstance();
 
         $queryMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaStore',
+            'Sonder\Plugins\Captcha\Classes\CaptchaStore',
             '_query'
         );
 
         $getRowMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaStore',
+            'Sonder\Plugins\Captcha\Classes\CaptchaStore',
             '_getRow'
         );
 
         $queryMethod->setAccessible(true);
         $getRowMethod->setAccessible(true);
 
-        $selectQuery = 'SELECT foo FROM bar;';
+        $selectQuery = /** @lang SQLite */
+            'SELECT foo FROM bar;';
 
-        $createQuery = '
+        $createQuery = /** @lang SQLite */
+            '
             CREATE TABLE bar (
                 foo TEXT PRIMARY KEY
             );
         ';
 
-        $insertQuery = '
+        $insertQuery = /** @lang SQLite */
+            '
             INSERT INTO bar (
                 foo
             ) VALUES (
@@ -385,7 +356,7 @@ class CaptchaStoreTest extends CaptchaTest
             );
         ';
 
-        $insertQuery = sprintf($insertQuery, static::TEXT);
+        $insertQuery = sprintf($insertQuery, CaptchaStoreTest::TEXT);
 
         $exception = null;
 
@@ -393,7 +364,7 @@ class CaptchaStoreTest extends CaptchaTest
             $queryMethod->invoke($captchaStore);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaStoreException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException',
                 $exception
             );
         }
@@ -414,16 +385,19 @@ class CaptchaStoreTest extends CaptchaTest
 
         $this->assertNotEmpty($row);
 
-        $this->assertTrue(array_key_exists('foo', $row));
+        $this->assertArrayHasKey('foo', $row);
 
-        $this->assertEquals($row['foo'], static::TEXT);
+        $this->assertEquals(CaptchaStoreTest::TEXT, $row['foo']);
     }
 
+    /**
+     * @return ICaptchaStore
+     */
     private function _getCaptchaStoreInstance(): ICaptchaStore
     {
         return new CaptchaStore(
-            static::DATA_DIR_PATH,
-            static::DATABASE_FILE_NAME
+            CaptchaStoreTest::DATA_DIR_PATH,
+            CaptchaStoreTest::DATABASE_FILE_NAME
         );
     }
 }

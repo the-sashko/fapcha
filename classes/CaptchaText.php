@@ -1,12 +1,15 @@
 <?php
-namespace Core\Plugins\Captcha\Classes;
 
-use Core\Plugins\Captcha\Interfaces\ICaptchaText;
-use Core\Plugins\Captcha\Interfaces\ICaptchaStore;
+namespace Sonder\Plugins\Captcha\Classes;
 
-use Core\Plugins\Captcha\Exceptions\CaptchaTextException;
+use Exception;
+use Sonder\Plugins\Captcha\Exceptions\CaptchaException;
+use Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException;
+use Sonder\Plugins\Captcha\Exceptions\CaptchaTextException;
+use Sonder\Plugins\Captcha\Interfaces\ICaptchaStore;
+use Sonder\Plugins\Captcha\Interfaces\ICaptchaText;
 
-class CaptchaText implements ICaptchaText
+final class CaptchaText implements ICaptchaText
 {
     const GENDERS = [
         'male',
@@ -15,17 +18,26 @@ class CaptchaText implements ICaptchaText
         'plural'
     ];
 
-    const DICTIONARIES_DIR_PATH = __DIR__.'/../res/dictionaries';
+    const DICTIONARIES_DIR_PATH = __DIR__ . '/../res/dictionaries';
 
-    public function get(
-        ?string $language    = null,
+    /**
+     * @param string|null $language
+     * @param string|null $dataDirPath
+     *
+     * @return string
+     *
+     * @throws CaptchaTextException
+     * @throws CaptchaStoreException
+     */
+    final public function get(
+        ?string $language = null,
         ?string $dataDirPath = null
     ): string
     {
         if (empty($language)) {
             throw new CaptchaTextException(
                 CaptchaTextException::MESSAGE_TEXT_LANGUAGE_IS_NOT_SET,
-                CaptchaTextException::CODE_TEXT_LANGUAGE_IS_NOT_SET
+                CaptchaException::CODE_TEXT_LANGUAGE_IS_NOT_SET
             );
         }
 
@@ -38,22 +50,22 @@ class CaptchaText implements ICaptchaText
 
             throw new CaptchaTextException(
                 $errorMessage,
-                CaptchaTextException::CODE_TEXT_INVALID_LANGUAGE
+                CaptchaException::CODE_TEXT_INVALID_LANGUAGE
             );
         }
 
         if (empty($dataDirPath)) {
             throw new CaptchaTextException(
                 CaptchaTextException::MESSAGE_TEXT_DATA_DIR_PATH_IS_NOT_SET,
-                CaptchaTextException::CODE_TEXT_DATA_DIR_PATH_IS_NOT_SET
+                CaptchaException::CODE_TEXT_DATA_DIR_PATH_IS_NOT_SET
             );
         }
 
         $captchaStore = new CaptchaStore($dataDirPath);
-        $gender       = $this->_getGender();
+        $gender = $this->_getGender();
 
         $dictionary = sprintf('%s_adjective_%s', $language, $gender);
-        $adjective  = $captchaStore->getRandomWord($dictionary);
+        $adjective = $captchaStore->getRandomWord($dictionary);
 
         if (empty($adjective)) {
             $errorMessage = CaptchaTextException::MESSAGE_TEXT_WORD_IS_EMPTY;
@@ -66,12 +78,12 @@ class CaptchaText implements ICaptchaText
 
             throw new CaptchaTextException(
                 $errorMessage,
-                CaptchaTextException::CODE_TEXT_WORD_IS_EMPTY
+                CaptchaException::CODE_TEXT_WORD_IS_EMPTY
             );
         }
 
         $dictionary = sprintf('%s_noun_%s', $language, $gender);
-        $noun       = $captchaStore->getRandomWord($dictionary);
+        $noun = $captchaStore->getRandomWord($dictionary);
 
         if (empty($noun)) {
             $errorMessage = CaptchaTextException::MESSAGE_TEXT_WORD_IS_EMPTY;
@@ -84,19 +96,25 @@ class CaptchaText implements ICaptchaText
 
             throw new CaptchaTextException(
                 $errorMessage,
-                CaptchaTextException::CODE_TEXT_WORD_IS_EMPTY
+                CaptchaException::CODE_TEXT_WORD_IS_EMPTY
             );
         }
 
         return sprintf('%s %s', $adjective, $noun);
     }
 
-    public function update(?string $dataDirPath = null): void
+    /**
+     * @param string|null $dataDirPath
+     *
+     * @throws CaptchaStoreException
+     * @throws CaptchaTextException
+     */
+    final public function update(?string $dataDirPath = null): void
     {
         if (empty($dataDirPath)) {
             throw new CaptchaTextException(
                 CaptchaTextException::MESSAGE_TEXT_DATA_DIR_PATH_IS_NOT_SET,
-                CaptchaTextException::CODE_TEXT_DATA_DIR_PATH_IS_NOT_SET
+                CaptchaException::CODE_TEXT_DATA_DIR_PATH_IS_NOT_SET
             );
         }
 
@@ -105,7 +123,7 @@ class CaptchaText implements ICaptchaText
         if (empty($dictionaries)) {
             throw new CaptchaTextException(
                 CaptchaTextException::MESSAGE_TEXT_DICTIONARIES_NOT_FOUND,
-                CaptchaTextException::CODE_TEXT_DICTIONARIES_NOT_FOUND
+                CaptchaException::CODE_TEXT_DICTIONARIES_NOT_FOUND
             );
         }
 
@@ -131,58 +149,70 @@ class CaptchaText implements ICaptchaText
         $captchaStore->updateDatabase($dataDirPath);
     }
 
+    /**
+     * @param string|null $language
+     *
+     * @return bool
+     *
+     * @throws CaptchaTextException
+     */
     private function _isValidLanguage(?string $language = null): bool
     {
         if (empty($language)) {
             return false;
         }
 
-        $dictionaries = [];
-
         $dictionariesMetaFilePath = sprintf(
             '%s/meta.json',
-            static::DICTIONARIES_DIR_PATH
+            CaptchaText::DICTIONARIES_DIR_PATH
         );
 
         $dictionariesMeta = $this->_getTextFromFile($dictionariesMetaFilePath);
-        $dictionariesMeta = (array) json_decode($dictionariesMeta, true);
+        $dictionariesMeta = (array)json_decode($dictionariesMeta, true);
 
         $languages = array_keys($dictionariesMeta);
 
         return in_array($language, $languages);
     }
 
+    /**
+     * @param string|null $dictionary
+     * @param array|null $words
+     * @param ICaptchaStore|null $captchaStore
+     *
+     * @throws CaptchaTextException
+     */
     private function _insertDictionaryToStore(
-        ?string        $dictionary   = null,
-        ?array         $words        = null,
+        ?string        $dictionary = null,
+        ?array         $words = null,
         ?ICaptchaStore $captchaStore = null
     ): void
     {
         if (empty($dictionary)) {
             throw new CaptchaTextException(
                 CaptchaTextException::MESSAGE_TEXT_DICTIONARY_IS_NOT_SET,
-                CaptchaTextException::CODE_TEXT_DICTIONARY_IS_NOT_SET
+                CaptchaException::CODE_TEXT_DICTIONARY_IS_NOT_SET
             );
         }
 
         if (empty($words)) {
             throw new CaptchaTextException(
                 CaptchaTextException::MESSAGE_TEXT_WORDS_ARE_NOT_SET,
-                CaptchaTextException::CODE_TEXT_WORDS_ARE_NOT_SET
+                CaptchaException::CODE_TEXT_WORDS_ARE_NOT_SET
             );
         }
 
         if (empty($captchaStore)) {
             throw new CaptchaTextException(
                 CaptchaTextException::MESSAGE_TEXT_STORE_IS_NOT_SET,
-                CaptchaTextException::CODE_TEXT_STORE_IS_NOT_SET
+                CaptchaException::CODE_TEXT_STORE_IS_NOT_SET
             );
         }
 
         $captchaStore->createDictionary($dictionary);
 
         foreach ($words as $word) {
-            $word = mb_convert_case((string) $word, MB_CASE_LOWER);
+            $word = mb_convert_case((string)$word, MB_CASE_LOWER);
             $word = preg_replace('/\s/sui', '', $word);
 
             if (empty($word)) {
@@ -193,24 +223,32 @@ class CaptchaText implements ICaptchaText
         }
     }
 
+    /**
+     * @return string
+     */
     private function _getGender(): string
     {
-        $countOfGenders = count(static::GENDERS);
+        $countOfGenders = count(CaptchaText::GENDERS);
 
-        return static::GENDERS[rand(0, $countOfGenders-1)];
+        return CaptchaText::GENDERS[rand(0, $countOfGenders - 1)];
     }
 
+    /**
+     * @return array|null
+     *
+     * @throws CaptchaTextException
+     */
     private function _getDictionaries(): ?array
     {
         $dictionaries = [];
 
         $dictionariesMetaFilePath = sprintf(
             '%s/meta.json',
-            static::DICTIONARIES_DIR_PATH
+            CaptchaText::DICTIONARIES_DIR_PATH
         );
 
         $dictionariesMeta = $this->_getTextFromFile($dictionariesMetaFilePath);
-        $dictionariesMeta = (array) json_decode($dictionariesMeta, true);
+        $dictionariesMeta = (array)json_decode($dictionariesMeta, true);
 
         if (!$this->_isDictionariesMetaHasCorrectFormat($dictionariesMeta)) {
             return null;
@@ -220,13 +258,20 @@ class CaptchaText implements ICaptchaText
             $this->_setDictionariesByLanguage(
                 $dictionaries,
                 $language,
-                (bool) $dictionaryMeta['gender_derivatives']
+                (bool)$dictionaryMeta['gender_derivatives']
             );
         }
 
         return $dictionaries;
     }
 
+    /**
+     * @param array|null $dictionariesMeta
+     *
+     * @return bool
+     *
+     * @throws CaptchaTextException
+     */
     private function _isDictionariesMetaHasCorrectFormat(
         ?array $dictionariesMeta = null
     ): bool
@@ -244,7 +289,7 @@ class CaptchaText implements ICaptchaText
             ) {
                 throw new CaptchaTextException(
                     CaptchaTextException::MESSAGE_TEXT_METADATA_HAS_BAD_FORMAT,
-                    CaptchaTextException::CODE_TEXT_METADATA_HAS_BAD_FORMAT
+                    CaptchaException::CODE_TEXT_METADATA_HAS_BAD_FORMAT
                 );
             }
         }
@@ -252,34 +297,41 @@ class CaptchaText implements ICaptchaText
         return true;
     }
 
+    /**
+     * @param array $dictionaries
+     * @param string|null $language
+     * @param bool $isGenderDerivatives
+     *
+     * @throws CaptchaTextException
+     */
     private function _setDictionariesByLanguage(
-        array  &$dictionaries,
-        ?string $language            = null,
+        array   &$dictionaries,
+        ?string $language = null,
         bool    $isGenderDerivatives = false
     ): void
     {
         if (empty($language)) {
             throw new CaptchaTextException(
                 CaptchaTextException::MESSAGE_TEXT_LANGUAGE_IS_NOT_SET,
-                CaptchaTextException::CODE_TEXT_LANGUAGE_IS_NOT_SET
+                CaptchaException::CODE_TEXT_LANGUAGE_IS_NOT_SET
             );
         }
 
         $dictionaryDirPath = sprintf(
             '%s/%s',
-            static::DICTIONARIES_DIR_PATH,
+            CaptchaText::DICTIONARIES_DIR_PATH,
             $language
         );
 
-        $adjectiveMaleKey    = sprintf('%s_adjective_male', $language);
-        $adjectiveFemaleKey  = sprintf('%s_adjective_female', $language);
+        $adjectiveMaleKey = sprintf('%s_adjective_male', $language);
+        $adjectiveFemaleKey = sprintf('%s_adjective_female', $language);
         $adjectiveNeutralKey = sprintf('%s_adjective_neutral', $language);
-        $adjectivePluralKey  = sprintf('%s_adjective_plural', $language);
+        $adjectivePluralKey = sprintf('%s_adjective_plural', $language);
 
-        $nounMaleKey    = sprintf('%s_noun_male', $language);
-        $nounFemaleKey  = sprintf('%s_noun_female', $language);
+        $nounMaleKey = sprintf('%s_noun_male', $language);
+        $nounFemaleKey = sprintf('%s_noun_female', $language);
         $nounNeutralKey = sprintf('%s_noun_neutral', $language);
-        $nounPluralKey  = sprintf('%s_noun_plural', $language);
+        $nounPluralKey = sprintf('%s_noun_plural', $language);
 
         $adjectiveMaleFilePath = sprintf(
             '%s/adjective_male.txt',
@@ -326,39 +378,46 @@ class CaptchaText implements ICaptchaText
 
             $nounFilePath = sprintf('%s/noun.txt', $dictionaryDirPath);
 
-            $adjectiveMaleFilePath    = $adjectiveFilePath;
-            $adjectiveFemaleFilePath  = $adjectiveFilePath;
+            $adjectiveMaleFilePath = $adjectiveFilePath;
+            $adjectiveFemaleFilePath = $adjectiveFilePath;
             $adjectiveNeutralFilePath = $adjectiveFilePath;
-            $adjectivePluralFilePath  = $adjectiveFilePath;
+            $adjectivePluralFilePath = $adjectiveFilePath;
 
-            $nounMaleFilePath    = $nounFilePath;
-            $nounFemaleFilePath  = $nounFilePath;
+            $nounMaleFilePath = $nounFilePath;
+            $nounFemaleFilePath = $nounFilePath;
             $nounNeutralFilePath = $nounFilePath;
-            $nounPluralFilePath  = $nounFilePath;
+            $nounPluralFilePath = $nounFilePath;
         }
 
-        $dictionaries[$adjectiveMaleKey]    = $adjectiveMaleFilePath;
-        $dictionaries[$adjectiveFemaleKey]  = $adjectiveFemaleFilePath;
+        $dictionaries[$adjectiveMaleKey] = $adjectiveMaleFilePath;
+        $dictionaries[$adjectiveFemaleKey] = $adjectiveFemaleFilePath;
         $dictionaries[$adjectiveNeutralKey] = $adjectiveNeutralFilePath;
-        $dictionaries[$adjectivePluralKey]  = $adjectivePluralFilePath;
-        $dictionaries[$nounMaleKey]         = $nounMaleFilePath;
-        $dictionaries[$nounFemaleKey]       = $nounFemaleFilePath;
-        $dictionaries[$nounNeutralKey]      = $nounNeutralFilePath;
-        $dictionaries[$nounPluralKey]       = $nounPluralFilePath;
+        $dictionaries[$adjectivePluralKey] = $adjectivePluralFilePath;
+        $dictionaries[$nounMaleKey] = $nounMaleFilePath;
+        $dictionaries[$nounFemaleKey] = $nounFemaleFilePath;
+        $dictionaries[$nounNeutralKey] = $nounNeutralFilePath;
+        $dictionaries[$nounPluralKey] = $nounPluralFilePath;
     }
 
+    /**
+     * @param string|null $filePath
+     *
+     * @return string
+     *
+     * @throws CaptchaTextException
+     */
     private function _getTextFromFile(?string $filePath = null): string
     {
         if (empty($filePath)) {
             throw new CaptchaTextException(
                 CaptchaTextException::MESSAGE_TEXT_FILE_PATH_IS_EMPTY,
-                CaptchaTextException::CODE_TEXT_FILE_PATH_IS_EMPTY
+                CaptchaException::CODE_TEXT_FILE_PATH_IS_EMPTY
             );
         }
 
         try {
-            return (string) file_get_contents($filePath);
-        } catch (\Exception $exp) {
+            return (string)file_get_contents($filePath);
+        } catch (Exception $exp) {
             $errorMessage = '%s. File: %s. Error: %s';
 
             $errorMessage = sprintf(
@@ -370,7 +429,7 @@ class CaptchaText implements ICaptchaText
 
             throw new CaptchaTextException(
                 $errorMessage,
-                CaptchaTextException::CODE_TEXT_CAN_NOT_OPEN_FILE
+                CaptchaException::CODE_TEXT_CAN_NOT_OPEN_FILE
             );
         }
     }

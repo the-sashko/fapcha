@@ -1,71 +1,57 @@
 <?php
-use Core\Plugins\Captcha\Classes\CaptchaEntity;
-use Core\Plugins\Captcha\Classes\CaptchaSettings;
 
-/**
- * Class For Testing CaptchaPlugin Entity Class
- */
-class CaptchaEntityTest extends CaptchaTest
+use Sonder\Plugins\Captcha\Classes\CaptchaEntity;
+use Sonder\Plugins\Captcha\Classes\CaptchaSettings;
+use Sonder\Plugins\Captcha\Exceptions\CaptchaEntityException;
+use Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException;
+
+final class CaptchaEntityTest extends CaptchaTest
 {
-    /**
-     * @var string Sample Captcha Text For Unit Tests
-     */
     const TEXT = 'foo bar';
 
-    /**
-     * @var string Sample Captcha Hash For Unit Tests
-     */
-    const HASH = '2918553c85b053da3f1bf4777fc64cca112e956eb1e8f3b627def9ab5dd'.
-                 '31ac8';
+    const HASH = '2918553c85b053da3f1bf4777fc64cca112e956eb1e8f3b627def9ab5dd' .
+    '31ac8';
 
-    /**
-     * @var string Sample Captcha Image File Name For Unit Tests
-     */
     const IMAGE_FILE_NAME = 'test.png';
 
-    /**
-     * @var array Sample List Of Entity Data For Unit Tests
-     */
     const ENTITY_DATA_LIST = [
         [
-            'text'            => 'foo',
-            'hash'            => 'foo',
+            'text' => 'foo',
+            'hash' => 'foo',
             'image_file_name' => 'foo.png'
         ],
         [
-            'text'            => 'bar',
-            'hash'            => 'bar',
+            'text' => 'bar',
+            'hash' => 'bar',
             'image_file_name' => 'bar.png'
         ],
         [
-            'text'            => 'test',
-            'hash'            => 'test',
+            'text' => 'test',
+            'hash' => 'test',
             'image_file_name' => 'test.png'
         ]
     ];
 
-    /**
-     * @var string Sample Captcha Image Directory Path For Unit Tests
-     */
     const IMAGE_DIRECTORY_PATH = 'test';
 
     /**
-     * Unit Test Of CaptchaEntity getText Method
+     * @throws CaptchaEntityException
+     * @throws CaptchaSettingsException
      */
-    public function testGetText(): void
+    final public function testGetText(): void
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
-        $captchaEntity   = $this->_getCaptchaEntityInstance();
+        $captchaEntity = $this->_getCaptchaEntityInstance();
 
         $this->assertEquals(
-            $captchaEntity->getText(),
-            static::TEXT
+            CaptchaEntityTest::TEXT,
+            $captchaEntity->getText()
         );
 
         $captchaEntity = new CaptchaEntity(
             '',
-            static::HASH,
-            static::IMAGE_FILE_NAME,
+            CaptchaEntityTest::HASH,
+            CaptchaEntityTest::IMAGE_FILE_NAME,
             $captchaSettings
         );
 
@@ -75,7 +61,7 @@ class CaptchaEntityTest extends CaptchaTest
             $captchaEntity->getText();
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaEntityException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaEntityException',
                 $exception
             );
         }
@@ -84,22 +70,23 @@ class CaptchaEntityTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaEntity getHash Method
+     * @throws CaptchaEntityException
+     * @throws CaptchaSettingsException
      */
-    public function testGetHash(): void
+    final public function testGetHash(): void
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
-        $captchaEntity   = $this->_getCaptchaEntityInstance();
+        $captchaEntity = $this->_getCaptchaEntityInstance();
 
         $this->assertEquals(
-            $captchaEntity->getHash(),
-            static::HASH
+            CaptchaEntityTest::HASH,
+            $captchaEntity->getHash()
         );
 
         $captchaEntity = new CaptchaEntity(
-            static::TEXT,
+            CaptchaEntityTest::TEXT,
             '',
-            static::IMAGE_FILE_NAME,
+            CaptchaEntityTest::IMAGE_FILE_NAME,
             $captchaSettings
         );
 
@@ -109,7 +96,7 @@ class CaptchaEntityTest extends CaptchaTest
             $captchaEntity->getHash();
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaEntityException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaEntityException',
                 $exception
             );
         }
@@ -118,60 +105,64 @@ class CaptchaEntityTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaEntity getImageFilePath Method
+     * @throws CaptchaEntityException
+     * @throws CaptchaSettingsException
      */
-    public function testGetImageFilePath(): void
+    final public function testGetImageFilePath(): void
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
-        $captchaEntity   = $this->_getCaptchaEntityInstance();
-        $imageFilePath   = $captchaEntity->getImageFilePath();
+        $captchaEntity = $this->_getCaptchaEntityInstance();
+        $imageFilePath = $captchaEntity->getImageFilePath();
 
-        $assertRegexp = '/^%s\/img\/[\d]{4}\/[\d]{2}\/[\d]{2}\/[\d]{2}\/'.
-                        '[\d]{2}\/[\d]{2}\/%s$/sui';
+        $assertRegexp = '/^%s\/img\/[\d]{4}\/[\d]{2}\/[\d]{2}\/[\d]{2}\/' .
+            '[\d]{2}\/[\d]{2}\/%s$/sui';
         $assertRegexp = sprintf(
             $assertRegexp,
             str_replace('/', '\/', $captchaSettings->getDataDirPath()),
-            static::IMAGE_FILE_NAME
+            CaptchaEntityTest::IMAGE_FILE_NAME
         );
 
-        $this->assertTrue((bool) preg_match($assertRegexp, $imageFilePath));
+        $this->assertTrue((bool)preg_match($assertRegexp, $imageFilePath));
     }
 
     /**
-     * Unit Test Of CaptchaEntity getImageUrlPath Method
+     * @throws CaptchaEntityException
+     * @throws CaptchaSettingsException
      */
-    public function testGetImageUrlPath(): void
+    final public function testGetImageUrlPath(): void
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
-        $captchaEntity   = $this->_getCaptchaEntityInstance();
-        $imageUrlPath   = $captchaEntity->getImageUrlPath();
+        $captchaEntity = $this->_getCaptchaEntityInstance();
+        $imageUrlPath = $captchaEntity->getImageUrlPath();
 
-        $assertRegexp = '/^%s[\d]{4}\/[\d]{2}\/[\d]{2}\/[\d]{2}\/'.
-                        '[\d]{2}\/[\d]{2}\/%s$/sui';
+        $assertRegexp = '/^%s[\d]{4}\/[\d]{2}\/[\d]{2}\/[\d]{2}\/' .
+            '[\d]{2}\/[\d]{2}\/%s$/sui';
         $assertRegexp = sprintf(
             $assertRegexp,
             str_replace('/', '\/', $captchaSettings->getImageUrlTemplate()),
-            static::IMAGE_FILE_NAME
+            CaptchaEntityTest::IMAGE_FILE_NAME
         );
 
-        $this->assertTrue((bool) preg_match($assertRegexp, $imageUrlPath));
+        $this->assertTrue((bool)preg_match($assertRegexp, $imageUrlPath));
     }
 
     /**
-     * Unit Test Of CaptchaEntity _setText Method
+     * @throws CaptchaEntityException
+     * @throws CaptchaSettingsException
+     * @throws ReflectionException
      */
-    public function testSetText(): void
+    final public function testSetText(): void
     {
         $captchaEntity = $this->_getCaptchaEntityInstance();
 
         $setTextMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaEntity',
+            'Sonder\Plugins\Captcha\Classes\CaptchaEntity',
             '_setText'
         );
 
         $setTextMethod->setAccessible(true);
 
-        $entityDataList = static::ENTITY_DATA_LIST;
+        $entityDataList = CaptchaEntityTest::ENTITY_DATA_LIST;
 
         foreach ($entityDataList as $entityData) {
             $text = $entityData['text'];
@@ -183,20 +174,22 @@ class CaptchaEntityTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaEntity _setHash Method
+     * @throws CaptchaEntityException
+     * @throws CaptchaSettingsException
+     * @throws ReflectionException
      */
-    public function testSetHash(): void
+    final public function testSetHash(): void
     {
         $captchaEntity = $this->_getCaptchaEntityInstance();
 
         $setHashMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaEntity',
+            'Sonder\Plugins\Captcha\Classes\CaptchaEntity',
             '_setHash'
         );
 
         $setHashMethod->setAccessible(true);
 
-        $entityDataList = static::ENTITY_DATA_LIST;
+        $entityDataList = CaptchaEntityTest::ENTITY_DATA_LIST;
 
         foreach ($entityDataList as $entityData) {
             $hash = $entityData['hash'];
@@ -208,21 +201,23 @@ class CaptchaEntityTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaEntity _setImagePath Method
+     * @throws CaptchaEntityException
+     * @throws CaptchaSettingsException
+     * @throws ReflectionException
      */
-    public function testSetImagePath(): void
+    final public function testSetImagePath(): void
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
-        $captchaEntity   = $this->_getCaptchaEntityInstance();
+        $captchaEntity = $this->_getCaptchaEntityInstance();
 
         $setImagePathMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaEntity',
+            'Sonder\Plugins\Captcha\Classes\CaptchaEntity',
             '_setImagePath'
         );
 
         $setImagePathMethod->setAccessible(true);
 
-        $entityDataList = static::ENTITY_DATA_LIST;
+        $entityDataList = CaptchaEntityTest::ENTITY_DATA_LIST;
 
         foreach ($entityDataList as $entityData) {
             $imageFileName = $entityData['image_file_name'];
@@ -236,13 +231,13 @@ class CaptchaEntityTest extends CaptchaTest
             );
 
             $imageFilePath = $captchaEntity->getImageFilePath();
-            $imageUrlPath  = $captchaEntity->getImageUrlPath();
+            $imageUrlPath = $captchaEntity->getImageUrlPath();
 
-            $dataDirPath      = $captchaSettings->getDataDirPath();
+            $dataDirPath = $captchaSettings->getDataDirPath();
             $imageUrlTemplate = $captchaSettings->getImageUrlTemplate();
 
-            $assertRegexp = '/^%s\/img\/[\d]{4}\/[\d]{2}\/[\d]{2}\/[\d]{2}\/'.
-                            '[\d]{2}\/[\d]{2}\/%s$/sui';
+            $assertRegexp = '/^%s\/img\/[\d]{4}\/[\d]{2}\/[\d]{2}\/[\d]{2}\/' .
+                '[\d]{2}\/[\d]{2}\/%s$/sui';
 
             $assertRegexp = sprintf(
                 $assertRegexp,
@@ -250,13 +245,13 @@ class CaptchaEntityTest extends CaptchaTest
                 $imageFileName
             );
 
-            $this->assertTrue((bool) preg_match(
+            $this->assertTrue((bool)preg_match(
                 $assertRegexp,
                 $imageFilePath
             ));
 
-            $assertRegexp = '/^%s[\d]{4}\/[\d]{2}\/[\d]{2}\/'.
-                            '[\d]{2}\/[\d]{2}\/[\d]{2}\/%s$/sui';
+            $assertRegexp = '/^%s[\d]{4}\/[\d]{2}\/[\d]{2}\/' .
+                '[\d]{2}\/[\d]{2}\/[\d]{2}\/%s$/sui';
 
             $assertRegexp = sprintf(
                 $assertRegexp,
@@ -264,7 +259,7 @@ class CaptchaEntityTest extends CaptchaTest
                 $imageFileName
             );
 
-            $this->assertTrue((bool) preg_match(
+            $this->assertTrue((bool)preg_match(
                 $assertRegexp,
                 $imageUrlPath
             ));
@@ -272,58 +267,62 @@ class CaptchaEntityTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaEntity _createImageDerictory Method
+     * @throws CaptchaEntityException
+     * @throws CaptchaSettingsException
+     * @throws ReflectionException
      */
-    public function testCreateImageDerictory(): void
+    final public function testCreateImageDirectory(): void
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
-        $captchaEntity   = $this->_getCaptchaEntityInstance();
+        $captchaEntity = $this->_getCaptchaEntityInstance();
 
-        $createImageDerictoryMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaEntity',
-            '_createImageDerictory'
+        $createImageDirectoryMethod = new ReflectionMethod(
+            'Sonder\Plugins\Captcha\Classes\CaptchaEntity',
+            '_createImageDirectory'
         );
 
-        $createImageDerictoryMethod->setAccessible(true);
+        $createImageDirectoryMethod->setAccessible(true);
 
-        $directoryPath = $createImageDerictoryMethod->invokeArgs(
+        $directoryPath = $createImageDirectoryMethod->invokeArgs(
             $captchaEntity,
             [$captchaSettings]
         );
 
-        $this->assertTrue((bool) preg_match(
+        $this->assertTrue((bool)preg_match(
             '/^[\d]{4}\/[\d]{2}\/[\d]{2}\/[\d]{2}\/[\d]{2}\/[\d]{2}$/sui',
             $directoryPath
         ));
     }
 
     /**
-     * Unit Test Of CaptchaEntity _setImageUrlPath Method
+     * @throws CaptchaEntityException
+     * @throws CaptchaSettingsException
+     * @throws ReflectionException
      */
-    public function testImageUrlPath(): void
+    final public function testImageUrlPath(): void
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
-        $captchaEntity   = $this->_getCaptchaEntityInstance();
+        $captchaEntity = $this->_getCaptchaEntityInstance();
 
         $setImageUrlPathMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaEntity',
+            'Sonder\Plugins\Captcha\Classes\CaptchaEntity',
             '_setImageUrlPath'
         );
 
         $setImageUrlPathMethod->setAccessible(true);
 
-        $entityDataList = static::ENTITY_DATA_LIST;
+        $entityDataList = CaptchaEntityTest::ENTITY_DATA_LIST;
 
         foreach ($entityDataList as $entityData) {
-            $imageFileName    = $entityData['image_file_name'];
-            $dataDirPath      = $captchaSettings->getDataDirPath();
+            $imageFileName = $entityData['image_file_name'];
+
             $imageUrlTemplate = $captchaSettings->getImageUrlTemplate();
 
             $setImageUrlPathMethod->invokeArgs(
                 $captchaEntity,
                 [
                     $imageFileName,
-                    static::IMAGE_DIRECTORY_PATH,
+                    CaptchaEntityTest::IMAGE_DIRECTORY_PATH,
                     $imageUrlTemplate
                 ]
             );
@@ -331,7 +330,7 @@ class CaptchaEntityTest extends CaptchaTest
             $imageUrlPath = sprintf(
                 '%s%s/%s',
                 $imageUrlTemplate,
-                static::IMAGE_DIRECTORY_PATH,
+                CaptchaEntityTest::IMAGE_DIRECTORY_PATH,
                 $imageFileName
             );
 
@@ -342,22 +341,29 @@ class CaptchaEntityTest extends CaptchaTest
         }
     }
 
+    /**
+     * @return CaptchaSettings
+     * @throws CaptchaSettingsException
+     */
     private function _getCaptchaSettingsInstance(): CaptchaSettings
     {
         return new CaptchaSettings($this->getSettingsData());
     }
 
+    /**
+     * @return CaptchaEntity
+     * @throws CaptchaEntityException
+     * @throws CaptchaSettingsException
+     */
     private function _getCaptchaEntityInstance(): CaptchaEntity
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
 
-        $captchaEntity = new CaptchaEntity(
-            static::TEXT,
-            static::HASH,
-            static::IMAGE_FILE_NAME,
+        return new CaptchaEntity(
+            CaptchaEntityTest::TEXT,
+            CaptchaEntityTest::HASH,
+            CaptchaEntityTest::IMAGE_FILE_NAME,
             $captchaSettings
         );
-
-        return $captchaEntity;
     }
 }

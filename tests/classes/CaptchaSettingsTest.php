@@ -1,71 +1,49 @@
 <?php
-use Core\Plugins\Captcha\Classes\CaptchaSettings;
 
-/**
- * Class For Testing CaptchaPlugin Settings Class
- */
-class CaptchaSettingsTest extends CaptchaTest
+use Sonder\Plugins\Captcha\Classes\CaptchaSettings;
+use Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException;
+
+final class CaptchaSettingsTest extends CaptchaTest
 {
-    /**
-     * @var string Sample Data Directory Path For Unit Tests
-     */
-    const DATA_DIR_PATH = __DIR__.'/../tmp';
+    const DATA_DIR_PATH = __DIR__ . '/../tmp';
 
-    /**
-     * @var string Sample Invalid Data Directory Path For Unit Tests
-     */
-    const INVALID_DATA_DIR_PATH = __DIR__.'/../tmp/test/';
+    const INVALID_DATA_DIR_PATH = __DIR__ . '/../tmp/test/';
 
-    /**
-     * @var string Sample Image Url Template Value For Unit Tests
-     */
     const IMAGE_URL_TEMPLATE = '/test/';
 
-    /**
-     * @var string Sample Language Value For Unit Tests
-     */
     const LANGUAGE = 'test';
 
-    /**
-     * @var string Sample Captcha Hash Salt For Unit Tests
-     */
     const HASH_SALT = 'test';
 
-    /**
-     * @var array Sample List Of Settings Data For Unit Tests
-     */
     const SETTINGS_DATA_LIST = [
         [
-            'hash_salt'          => 'foo',
+            'hash_salt' => 'foo',
             'image_url_template' => 'foo',
-            'language'           => 'foo'
+            'language' => 'foo'
         ],
         [
-            'hash_salt'          => 'bar',
+            'hash_salt' => 'bar',
             'image_url_template' => 'bar',
-            'language'           => 'bar'
+            'language' => 'bar'
         ],
         [
-            'hash_salt'          => 'test',
+            'hash_salt' => 'test',
             'image_url_template' => 'test',
-            'language'           => 'test'
+            'language' => 'test'
         ]
     ];
 
-    /**
-     * @var array Sample Invalid Settings Data For Unit Tests
-     */
     const INVALID_SETTINGS_DATA = [
         'foo' => 'bar'
     ];
 
     /**
-     * Unit Test Of CaptchaSettings getHashSalt Method
+     * @throws CaptchaSettingsException
      */
-    public function testGetHashSalt(): void
+    final public function testGetHashSalt(): void
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
-        $settingsData    = $this->getSettingsData();
+        $settingsData = $this->getSettingsData();
 
         $this->assertEquals(
             $captchaSettings->getHashSalt(),
@@ -74,12 +52,12 @@ class CaptchaSettingsTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaSettings getDataDirPath Method
+     * @throws CaptchaSettingsException
      */
-    public function testGetDataDirPath(): void
+    final public function testGetDataDirPath(): void
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
-        $settingsData    = $this->getSettingsData();
+        $settingsData = $this->getSettingsData();
 
         $this->assertEquals(
             $captchaSettings->getDataDirPath(),
@@ -88,12 +66,12 @@ class CaptchaSettingsTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaSettings getImageUrlTemplate Method
+     * @throws CaptchaSettingsException
      */
-    public function testGetImageUrlTemplate(): void
+    final public function testGetImageUrlTemplate(): void
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
-        $settingsData    = $this->getSettingsData();
+        $settingsData = $this->getSettingsData();
 
         $this->assertEquals(
             $captchaSettings->getImageUrlTemplate(),
@@ -102,12 +80,12 @@ class CaptchaSettingsTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaSettings getLanguage Method
+     * @throws CaptchaSettingsException
      */
-    public function testGetLanguage(): void
+    final public function testGetLanguage(): void
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
-        $settingsData    = $this->getSettingsData();
+        $settingsData = $this->getSettingsData();
 
         $this->assertEquals(
             $captchaSettings->getLanguage(),
@@ -116,15 +94,16 @@ class CaptchaSettingsTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaSettings _mapSettingsData Method
+     * @throws CaptchaSettingsException
+     * @throws ReflectionException
      */
-    public function testMapSettingsData(): void
+    final public function testMapSettingsData(): void
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
-        $settingsData    = $this->getSettingsData();
+        $settingsData = $this->getSettingsData();
 
         $mapSettingsDataMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaSettings',
+            'Sonder\Plugins\Captcha\Classes\CaptchaSettings',
             '_mapSettingsData'
         );
 
@@ -136,7 +115,7 @@ class CaptchaSettingsTest extends CaptchaTest
             $mapSettingsDataMethod->invoke($captchaSettings);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaSettingsException',
+                'SonderPlugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
             );
         }
@@ -148,11 +127,11 @@ class CaptchaSettingsTest extends CaptchaTest
         try {
             $mapSettingsDataMethod->invokeArgs(
                 $captchaSettings,
-                [static::INVALID_SETTINGS_DATA]
+                [CaptchaSettingsTest::INVALID_SETTINGS_DATA]
             );
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaSettingsException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
             );
         }
@@ -162,36 +141,37 @@ class CaptchaSettingsTest extends CaptchaTest
         $mapSettingsDataMethod->invokeArgs($captchaSettings, [$settingsData]);
 
         $this->assertEquals(
-            $captchaSettings->getHashSalt(),
-            static::HASH_SALT
+            CaptchaSettingsTest::HASH_SALT,
+            $captchaSettings->getHashSalt()
         );
 
         $this->assertEquals(
-            $captchaSettings->getDataDirPath(),
-            static::DATA_DIR_PATH
+            CaptchaSettingsTest::DATA_DIR_PATH,
+            $captchaSettings->getDataDirPath()
         );
 
         $this->assertEquals(
-            $captchaSettings->getImageUrlTemplate(),
-            static::IMAGE_URL_TEMPLATE
+            CaptchaSettingsTest::IMAGE_URL_TEMPLATE,
+            $captchaSettings->getImageUrlTemplate()
         );
 
         $this->assertEquals(
-            $captchaSettings->getLanguage(),
-            static::LANGUAGE
+            CaptchaSettingsTest::LANGUAGE,
+            $captchaSettings->getLanguage()
         );
     }
 
     /**
-     * Unit Test Of CaptchaSettings _checkSettingsData Method
+     * @throws CaptchaSettingsException
+     * @throws ReflectionException
      */
-    public function testCheckSettingsData(): void
+    final public function testCheckSettingsData(): void
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
-        $settingsData    = $this->getSettingsData();
+        $settingsData = $this->getSettingsData();
 
         $checkSettingsDataMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaSettings',
+            'Sonder\Plugins\Captcha\Classes\CaptchaSettings',
             '_checkSettingsData'
         );
 
@@ -203,7 +183,7 @@ class CaptchaSettingsTest extends CaptchaTest
         );
 
         $settingsData['hash_salt'] = null;
-        $exception                 = null;
+        $exception = null;
 
         try {
             $checkSettingsDataMethod->invokeArgs(
@@ -212,7 +192,7 @@ class CaptchaSettingsTest extends CaptchaTest
             );
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaSettingsException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
             );
         }
@@ -230,7 +210,7 @@ class CaptchaSettingsTest extends CaptchaTest
             );
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaSettingsException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
             );
         }
@@ -238,7 +218,7 @@ class CaptchaSettingsTest extends CaptchaTest
         $this->assertNotEmpty($exception);
 
         $settingsData = null;
-        $exception    = null;
+        $exception = null;
 
         try {
             $checkSettingsDataMethod->invokeArgs(
@@ -247,15 +227,15 @@ class CaptchaSettingsTest extends CaptchaTest
             );
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaSettingsException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
             );
         }
 
         $this->assertNotEmpty($exception);
 
-        $settingsData = static::INVALID_SETTINGS_DATA;
-        $exception    = null;
+        $settingsData = CaptchaSettingsTest::INVALID_SETTINGS_DATA;
+        $exception = null;
 
         try {
             $checkSettingsDataMethod->invokeArgs(
@@ -264,7 +244,7 @@ class CaptchaSettingsTest extends CaptchaTest
             );
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaSettingsException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
             );
         }
@@ -273,14 +253,15 @@ class CaptchaSettingsTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaSettings _setHashSalt Method
+     * @throws CaptchaSettingsException
+     * @throws ReflectionException
      */
-    public function testSetHashSalt(): void
+    final public function testSetHashSalt(): void
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
 
         $setHashSaltMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaSettings',
+            'Sonder\Plugins\Captcha\Classes\CaptchaSettings',
             '_setHashSalt'
         );
 
@@ -292,14 +273,14 @@ class CaptchaSettingsTest extends CaptchaTest
             $setHashSaltMethod->invoke($captchaSettings);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaSettingsException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
             );
         }
 
         $this->assertNotEmpty($exception);
 
-        $settingsDataList = static::SETTINGS_DATA_LIST;
+        $settingsDataList = CaptchaSettingsTest::SETTINGS_DATA_LIST;
 
         foreach ($settingsDataList as $settingsData) {
             $hashSalt = $settingsData['hash_salt'];
@@ -311,15 +292,16 @@ class CaptchaSettingsTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaSettings _setDataDirPath Method
+     * @throws CaptchaSettingsException
+     * @throws ReflectionException
      */
-    public function testSetDataDirPath(): void
+    final public function testSetDataDirPath(): void
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
-        $settingsData    = $this->getSettingsData();
+        $settingsData = $this->getSettingsData();
 
         $setDataDirPathMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaSettings',
+            'Sonder\Plugins\Captcha\Classes\CaptchaSettings',
             '_setDataDirPath'
         );
 
@@ -331,7 +313,7 @@ class CaptchaSettingsTest extends CaptchaTest
             $setDataDirPathMethod->invoke($captchaSettings);
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaSettingsException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
             );
         }
@@ -343,11 +325,11 @@ class CaptchaSettingsTest extends CaptchaTest
         try {
             $setDataDirPathMethod->invokeArgs(
                 $captchaSettings,
-                [static::INVALID_DATA_DIR_PATH]
+                [CaptchaSettingsTest::INVALID_DATA_DIR_PATH]
             );
         } catch (Exception $exception) {
             $this->assertInstanceOf(
-                'Core\Plugins\Captcha\Exceptions\CaptchaSettingsException',
+                'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
             );
         }
@@ -362,14 +344,15 @@ class CaptchaSettingsTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaSettings _setImageUrlTemplate Method
+     * @throws CaptchaSettingsException
+     * @throws ReflectionException
      */
-    public function testSetImageUrlTemplate(): void
+    final public function testSetImageUrlTemplate(): void
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
 
         $setImageUrlTemplateMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaSettings',
+            'Sonder\Plugins\Captcha\Classes\CaptchaSettings',
             '_setImageUrlTemplate'
         );
 
@@ -378,13 +361,11 @@ class CaptchaSettingsTest extends CaptchaTest
         $setImageUrlTemplateMethod->invoke($captchaSettings);
 
         $this->assertEquals(
-            $captchaSettings->getImageUrlTemplate(),
-            CaptchaSettings::DEFAULT_IMAGE_URL_TEMPLATE
+            CaptchaSettings::DEFAULT_IMAGE_URL_TEMPLATE,
+            $captchaSettings->getImageUrlTemplate()
         );
 
-        $exception = null;
-
-        $settingsDataList = static::SETTINGS_DATA_LIST;
+        $settingsDataList = CaptchaSettingsTest::SETTINGS_DATA_LIST;
 
         foreach ($settingsDataList as $settingsData) {
             $imageUrlTemplate = $settingsData['image_url_template'];
@@ -402,14 +383,15 @@ class CaptchaSettingsTest extends CaptchaTest
     }
 
     /**
-     * Unit Test Of CaptchaSettings _setLanguage Method
+     * @throws CaptchaSettingsException
+     * @throws ReflectionException
      */
-    public function testSetLanguage(): void
+    final public function testSetLanguage(): void
     {
         $captchaSettings = $this->_getCaptchaSettingsInstance();
 
         $setLanguageMethod = new ReflectionMethod(
-            'Core\Plugins\Captcha\Classes\CaptchaSettings',
+            'Sonder\Plugins\Captcha\Classes\CaptchaSettings',
             '_setLanguage'
         );
 
@@ -418,11 +400,11 @@ class CaptchaSettingsTest extends CaptchaTest
         $setLanguageMethod->invoke($captchaSettings);
 
         $this->assertEquals(
-            $captchaSettings->getLanguage(),
-            CaptchaSettings::DEFAULT_LANGUAGE
+            CaptchaSettings::DEFAULT_LANGUAGE,
+            $captchaSettings->getLanguage()
         );
 
-        $settingsDataList = static::SETTINGS_DATA_LIST;
+        $settingsDataList = CaptchaSettingsTest::SETTINGS_DATA_LIST;
 
         foreach ($settingsDataList as $settingsData) {
             $language = $settingsData['language'];
@@ -436,6 +418,10 @@ class CaptchaSettingsTest extends CaptchaTest
         }
     }
 
+    /**
+     * @return CaptchaSettings
+     * @throws CaptchaSettingsException
+     */
     private function _getCaptchaSettingsInstance(): CaptchaSettings
     {
         return new CaptchaSettings($this->getSettingsData());

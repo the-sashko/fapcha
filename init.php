@@ -1,7 +1,6 @@
 <?php
-$captchaPluginAutoload = function(string $dir, Closure $autoload): void
-{
-    foreach (glob($dir.'/*') as $fileItem) {
+$captchaPluginAutoload = function (string $dir, Closure $autoload): void {
+    foreach (glob($dir . '/*') as $fileItem) {
         if ($fileItem == __FILE__) {
             continue;
         }
@@ -18,10 +17,10 @@ $captchaPluginAutoload = function(string $dir, Closure $autoload): void
     }
 };
 
-require_once __DIR__.'/exceptions/CaptchaException.php';
+require_once __DIR__ . '/exceptions/CaptchaException.php';
 
-$captchaPluginAutoload(__DIR__.'/exceptions', $captchaPluginAutoload);
-$captchaPluginAutoload(__DIR__.'/interfaces', $captchaPluginAutoload);
-$captchaPluginAutoload(__DIR__.'/classes', $captchaPluginAutoload);
+$captchaPluginAutoload(__DIR__ . '/exceptions', $captchaPluginAutoload);
+$captchaPluginAutoload(__DIR__ . '/interfaces', $captchaPluginAutoload);
+$captchaPluginAutoload(__DIR__ . '/classes', $captchaPluginAutoload);
 
-require_once __DIR__.'/captcha.plugin.php';
+require_once __DIR__ . '/CaptchaPlugin.php';
