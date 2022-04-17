@@ -64,7 +64,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $saveImageMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -79,7 +79,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $saveImageMethod->invokeArgs($captchaImage, [$imageFilePath]);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -110,7 +110,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $setImageFormatMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -142,7 +142,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $gdPostProcessingMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -160,7 +160,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $gdPostProcessingMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf('ImagickException', $exception);
         }
 
@@ -185,7 +185,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $resizeImageMethod->invokeArgs($captchaImage, [null, null]);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -204,7 +204,7 @@ final class CaptchaImageTest extends CaptchaTest
                     CaptchaImageTest::IMAGE_HEIGHT
                 ]
             );
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -241,7 +241,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $setFiltersMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -272,7 +272,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $setBrightnessAndContrastMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -303,7 +303,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $resizeImageForFiltersMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -334,7 +334,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $setBlurFiltersMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -365,7 +365,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $posterizeImageMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -396,7 +396,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $setResizeFiltersMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -427,7 +427,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $drawDotsMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -455,7 +455,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $drawBigDotsMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -483,7 +483,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $drawMiddleDotsMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -511,7 +511,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $drawSmallDotsMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -542,7 +542,7 @@ final class CaptchaImageTest extends CaptchaTest
                 $captchaImage,
                 [CaptchaImageTest::DOT_SIZE]
             );
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -555,7 +555,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $drawDotMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -583,7 +583,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $drawLinesMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -611,7 +611,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $drawLineMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -640,7 +640,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $writeTextMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -653,7 +653,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $writeTextMethod->invokeArgs($captchaImage, [CaptchaImageTest::TEXT]);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -671,7 +671,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $writeTextMethod->invokeArgs($captchaImage, [CaptchaImageTest::TEXT]);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception
@@ -699,7 +699,7 @@ final class CaptchaImageTest extends CaptchaTest
 
         try {
             $createImageInstanceMethod->invoke($captchaImage);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaImageException',
                 $exception

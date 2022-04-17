@@ -2,7 +2,6 @@
 
 namespace Sonder\Plugins\Captcha\Classes;
 
-use Exception;
 use GdImage;
 use Imagick;
 use ImagickDraw;
@@ -13,6 +12,7 @@ use Sonder\Plugins\Captcha\Exceptions\CaptchaException;
 use Sonder\Plugins\Captcha\Exceptions\CaptchaImageException;
 use Sonder\Plugins\Captcha\Interfaces\ICaptchaEntity;
 use Sonder\Plugins\Captcha\Interfaces\ICaptchaImage;
+use Throwable;
 
 final class CaptchaImage implements ICaptchaImage
 {
@@ -142,8 +142,8 @@ final class CaptchaImage implements ICaptchaImage
                 CaptchaImage::IMAGE_WIDTH,
                 CaptchaImage::IMAGE_HEIGHT
             );
-        } catch (Exception $exp) {
-            $errorMessage = $exp->getMessage();
+        } catch (Throwable $thr) {
+            $errorMessage = $thr->getMessage();
 
             $errorMessage = sprintf(
                 '%s. Error: %s',

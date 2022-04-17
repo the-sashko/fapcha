@@ -45,7 +45,7 @@ final class CaptchaPluginTest extends CaptchaTest
 
         try {
             new CaptchaPlugin();
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
@@ -58,7 +58,7 @@ final class CaptchaPluginTest extends CaptchaTest
 
         try {
             new CaptchaPlugin(CaptchaPluginTest::INVALID_SETTINGS_DATA);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
@@ -71,7 +71,7 @@ final class CaptchaPluginTest extends CaptchaTest
 
         try {
             new CaptchaPlugin($settingsData);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception

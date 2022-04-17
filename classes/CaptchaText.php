@@ -8,6 +8,7 @@ use Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException;
 use Sonder\Plugins\Captcha\Exceptions\CaptchaTextException;
 use Sonder\Plugins\Captcha\Interfaces\ICaptchaStore;
 use Sonder\Plugins\Captcha\Interfaces\ICaptchaText;
+use Throwable;
 
 final class CaptchaText implements ICaptchaText
 {
@@ -417,14 +418,14 @@ final class CaptchaText implements ICaptchaText
 
         try {
             return (string)file_get_contents($filePath);
-        } catch (Exception $exp) {
+        } catch (Throwable $thr) {
             $errorMessage = '%s. File: %s. Error: %s';
 
             $errorMessage = sprintf(
                 $errorMessage,
                 CaptchaTextException::MESSAGE_TEXT_CAN_NOT_OPEN_FILE,
                 $filePath,
-                $exp->getMessage()
+                $thr->getMessage()
             );
 
             throw new CaptchaTextException(

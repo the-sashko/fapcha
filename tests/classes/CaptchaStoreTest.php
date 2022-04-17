@@ -29,7 +29,7 @@ final class CaptchaStoreTest extends CaptchaTest
 
         try {
             $captchaStore->getRandomWord();
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException',
                 $exception
@@ -73,7 +73,7 @@ final class CaptchaStoreTest extends CaptchaTest
 
         try {
             $captchaStore->createDictionary();
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException',
                 $exception
@@ -103,7 +103,7 @@ final class CaptchaStoreTest extends CaptchaTest
 
         try {
             $captchaStore->insertWord();
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException',
                 $exception
@@ -116,7 +116,7 @@ final class CaptchaStoreTest extends CaptchaTest
 
         try {
             $captchaStore->insertWord(CaptchaStoreTest::WORD_ADJECTIVE);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException',
                 $exception
@@ -147,7 +147,7 @@ final class CaptchaStoreTest extends CaptchaTest
 
         try {
             $captchaStore->updateDatabase();
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException',
                 $exception
@@ -235,7 +235,7 @@ final class CaptchaStoreTest extends CaptchaTest
 
         try {
             $getWordMethod->invoke($captchaStore);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException',
                 $exception
@@ -251,7 +251,7 @@ final class CaptchaStoreTest extends CaptchaTest
                 $captchaStore,
                 [CaptchaStoreTest::DICTIONARY_ADJECTIVE]
             );
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException',
                 $exception
@@ -362,7 +362,7 @@ final class CaptchaStoreTest extends CaptchaTest
 
         try {
             $queryMethod->invoke($captchaStore);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException',
                 $exception

@@ -2,11 +2,11 @@
 
 namespace Sonder\Plugins\Captcha\Classes;
 
-use Exception;
 use PDO;
 use Sonder\Plugins\Captcha\Exceptions\CaptchaException;
 use Sonder\Plugins\Captcha\Exceptions\CaptchaStoreException;
 use Sonder\Plugins\Captcha\Interfaces\ICaptchaStore;
+use Throwable;
 
 final class CaptchaStore implements ICaptchaStore
 {
@@ -168,13 +168,13 @@ final class CaptchaStore implements ICaptchaStore
 
             touch($this->_dataFilePath);
             chmod($this->_dataFilePath, 0775);
-        } catch (Exception $exp) {
+        } catch (Throwable $thr) {
             $errorMessage = '%s. Error: %s';
 
             $errorMessage = sprintf(
                 $errorMessage,
                 CaptchaStoreException::MESSAGE_STORE_CAN_NOT_CREATE_DATABASE,
-                $exp->getMessage()
+                $thr->getMessage()
             );
 
             throw new CaptchaStoreException(
@@ -230,13 +230,13 @@ final class CaptchaStore implements ICaptchaStore
             copy($newDatabaseFilePath, $oldDatabaseFilePath);
             chmod($oldDatabaseFilePath, 0775);
             unlink($newDatabaseFilePath);
-        } catch (Exception $exp) {
+        } catch (Throwable $thr) {
             $errorMessage = '%s. Error: %s';
 
             $errorMessage = sprintf(
                 $errorMessage,
                 CaptchaStoreException::MESSAGE_STORE_CAN_NOT_UPDATE_DATABASE,
-                $exp->getMessage()
+                $thr->getMessage()
             );
 
             throw new CaptchaStoreException(
@@ -261,13 +261,13 @@ final class CaptchaStore implements ICaptchaStore
                 touch($this->_dataFilePath);
                 chmod($this->_dataFilePath, 0775);
             }
-        } catch (Exception $exp) {
+        } catch (Throwable $thr) {
             $errorMessage = '%s. Error: %s';
 
             $errorMessage = sprintf(
                 $errorMessage,
                 CaptchaStoreException::MESSAGE_STORE_CAN_NOT_CREATE_DATABASE,
-                $exp->getMessage()
+                $thr->getMessage()
             );
 
             throw new CaptchaStoreException(
@@ -411,14 +411,14 @@ final class CaptchaStore implements ICaptchaStore
             }
 
             return array_shift($rows);
-        } catch (Exception $exp) {
+        } catch (Throwable $thr) {
             $errorMessage = '%s. Query: %s. Error: %s';
 
             $errorMessage = sprintf(
                 $errorMessage,
                 CaptchaStoreException::MESSAGE_STORE_QUERY_ERROR,
                 $sql,
-                $exp->getMessage()
+                $thr->getMessage()
             );
 
             throw new CaptchaStoreException(
@@ -448,14 +448,14 @@ final class CaptchaStore implements ICaptchaStore
             }
 
             $this->_dbInstance->query($sql);
-        } catch (Exception $exp) {
+        } catch (Throwable $thr) {
             $errorMessage = '%s. Query: %s. Error: %s';
 
             $errorMessage = sprintf(
                 $errorMessage,
                 CaptchaStoreException::MESSAGE_STORE_QUERY_ERROR,
                 $sql,
-                $exp->getMessage()
+                $thr->getMessage()
             );
 
             throw new CaptchaStoreException(

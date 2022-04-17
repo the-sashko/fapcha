@@ -79,15 +79,15 @@ try {
     $captchaEntity = $captchaPlugin->getEntity();
     $captchaImageUrl = $captchaEntity->getImageUrlPath();
     $captchaHash = $captchaEntity->getHash();
-} catch (Exception $exp) {
+} catch (Throwable $thr) {
     /**
      * If You Want To Catch Captcha Plugin Exception
      * You Can Find List Of Exception Classes, Errors And Codes
      * In exceptions Directory
      */
-    echo sprintf('<h1>%s</h1>', get_class($exp));
-    echo sprintf('<h2>%s</h2>', $exp->getMessage());
-    echo sprintf('<h3>%s</h3>', $exp->getCode());
+    echo sprintf('<h1>%s</h1>', get_class($thr));
+    echo sprintf('<h2>%s</h2>', $thr->getMessage());
+    echo sprintf('<h3>%s</h3>', $thr->getCode());
 
     exit(0);
 }

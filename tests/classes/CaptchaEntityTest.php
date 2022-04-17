@@ -59,7 +59,7 @@ final class CaptchaEntityTest extends CaptchaTest
 
         try {
             $captchaEntity->getText();
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaEntityException',
                 $exception
@@ -94,7 +94,7 @@ final class CaptchaEntityTest extends CaptchaTest
 
         try {
             $captchaEntity->getHash();
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaEntityException',
                 $exception

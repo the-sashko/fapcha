@@ -95,7 +95,7 @@ final class CaptchaTextTest extends CaptchaTest
 
         try {
             $captchaText->get();
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaTextException',
                 $exception
@@ -110,7 +110,7 @@ final class CaptchaTextTest extends CaptchaTest
 
         try {
             $captchaText->get($language);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaTextException',
                 $exception
@@ -125,7 +125,7 @@ final class CaptchaTextTest extends CaptchaTest
 
         try {
             $captchaText->get($language);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaTextException',
                 $exception
@@ -226,7 +226,7 @@ final class CaptchaTextTest extends CaptchaTest
 
         try {
             $insertDictionaryToStoreMethod->invoke($captchaText);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaTextException',
                 $exception
@@ -242,7 +242,7 @@ final class CaptchaTextTest extends CaptchaTest
                 $captchaText,
                 [CaptchaTextTest::DICTIONARY_ADJECTIVE]
             );
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaTextException',
                 $exception
@@ -261,7 +261,7 @@ final class CaptchaTextTest extends CaptchaTest
                     [CaptchaTextTest::WORD_ADJECTIVE]
                 ]
             );
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaTextException',
                 $exception
@@ -368,7 +368,7 @@ final class CaptchaTextTest extends CaptchaTest
                 $captchaText,
                 [CaptchaTextTest::INVALID_SETTINGS_META_LIST]
             );
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaTextException',
                 $exception
@@ -412,7 +412,7 @@ final class CaptchaTextTest extends CaptchaTest
                 $captchaText,
                 [&$dictionaries]
             );
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaTextException',
                 $exception
@@ -482,7 +482,7 @@ final class CaptchaTextTest extends CaptchaTest
 
         try {
             $getTextFromFileMethod->invoke($captchaText);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaTextException',
                 $exception
@@ -507,7 +507,7 @@ final class CaptchaTextTest extends CaptchaTest
                 $captchaText,
                 [CaptchaTextTest::TEST_FILE_PATH]
             );
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaTextException',
                 $exception

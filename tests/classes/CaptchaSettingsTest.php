@@ -113,7 +113,7 @@ final class CaptchaSettingsTest extends CaptchaTest
 
         try {
             $mapSettingsDataMethod->invoke($captchaSettings);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'SonderPlugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
@@ -129,7 +129,7 @@ final class CaptchaSettingsTest extends CaptchaTest
                 $captchaSettings,
                 [CaptchaSettingsTest::INVALID_SETTINGS_DATA]
             );
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
@@ -190,7 +190,7 @@ final class CaptchaSettingsTest extends CaptchaTest
                 $captchaSettings,
                 [$settingsData]
             );
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
@@ -208,7 +208,7 @@ final class CaptchaSettingsTest extends CaptchaTest
                 $captchaSettings,
                 [$settingsData]
             );
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
@@ -225,7 +225,7 @@ final class CaptchaSettingsTest extends CaptchaTest
                 $captchaSettings,
                 [$settingsData]
             );
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
@@ -242,7 +242,7 @@ final class CaptchaSettingsTest extends CaptchaTest
                 $captchaSettings,
                 [$settingsData]
             );
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
@@ -271,7 +271,7 @@ final class CaptchaSettingsTest extends CaptchaTest
 
         try {
             $setHashSaltMethod->invoke($captchaSettings);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
@@ -311,7 +311,7 @@ final class CaptchaSettingsTest extends CaptchaTest
 
         try {
             $setDataDirPathMethod->invoke($captchaSettings);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
@@ -327,7 +327,7 @@ final class CaptchaSettingsTest extends CaptchaTest
                 $captchaSettings,
                 [CaptchaSettingsTest::INVALID_DATA_DIR_PATH]
             );
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->assertInstanceOf(
                 'Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException',
                 $exception
