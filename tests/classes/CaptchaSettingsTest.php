@@ -5,17 +5,17 @@ use Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException;
 
 final class CaptchaSettingsTest extends CaptchaTest
 {
-    const DATA_DIR_PATH = __DIR__ . '/../tmp';
+    private const DATA_DIR_PATH = __DIR__ . '/../tmp';
 
-    const INVALID_DATA_DIR_PATH = __DIR__ . '/../tmp/test/';
+    private const IMAGE_URL_TEMPLATE = '/test/';
 
-    const IMAGE_URL_TEMPLATE = '/test/';
+    private const LANGUAGE = 'test';
 
-    const LANGUAGE = 'test';
+    private const HASH_SALT = 'test';
 
-    const HASH_SALT = 'test';
+    private const INVALID_DATA_DIR_PATH = __DIR__ . '/../tmp/test/';
 
-    const SETTINGS_DATA_LIST = [
+    private const SETTINGS_DATA_LIST = [
         [
             'hash_salt' => 'foo',
             'image_url_template' => 'foo',
@@ -33,7 +33,7 @@ final class CaptchaSettingsTest extends CaptchaTest
         ]
     ];
 
-    const INVALID_SETTINGS_DATA = [
+    private const INVALID_SETTINGS_DATA = [
         'foo' => 'bar'
     ];
 

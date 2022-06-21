@@ -9,20 +9,19 @@ use Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException;
 
 final class CaptchaImageTest extends CaptchaTest
 {
-    const DATA_DIR_PATH = __DIR__ . '/../tmp';
+    private const DATA_DIR_PATH = __DIR__ . '/../tmp';
 
-    const TEXT = 'foo bar';
+    private const TEXT = 'foo bar';
 
-    const HASH = '2918553c85b053da3f1bf4777fc64cca112e956eb1e8f3b627def9ab5dd' .
-    '31ac8';
+    private const HASH = '2918553c85b053da3f1bf4777fc64cca112e956eb1e8f3b627def9ab5dd31ac8';
 
-    const IMAGE_FILE_NAME = 'test.png';
+    private const IMAGE_FILE_NAME = 'test.png';
 
-    const IMAGE_WIDTH = 100;
+    private const IMAGE_WIDTH = 100;
 
-    const IMAGE_HEIGHT = 100;
+    private const IMAGE_HEIGHT = 100;
 
-    const DOT_SIZE = 10;
+    private const DOT_SIZE = 10;
 
     /**
      * @throws CaptchaEntityException

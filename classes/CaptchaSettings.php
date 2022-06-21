@@ -8,19 +8,19 @@ use Sonder\Plugins\Captcha\Interfaces\ICaptchaSettings;
 
 final class CaptchaSettings implements ICaptchaSettings
 {
-    const DEFAULT_LANGUAGE = 'en';
+    final public const DEFAULT_LANGUAGE = 'en';
 
-    const DEFAULT_DATA_DIR_PATH = __DIR__ . '/../../../../captcha';
+    final public const DEFAULT_IMAGE_URL_TEMPLATE = '/captcha/img/';
 
-    const DEFAULT_IMAGE_URL_TEMPLATE = '/captcha/img/';
+    private const DEFAULT_DATA_DIR_PATH = __DIR__ . '/../../../../captcha';
 
-    const HASH_SALT_ARRAY_KEY = 'hash_salt';
+    private const HASH_SALT_ARRAY_KEY = 'hash_salt';
 
-    const DATA_DIR_PATH_ARRAY_KEY = 'data_dir_path';
+    private const DATA_DIR_PATH_ARRAY_KEY = 'data_dir_path';
 
-    const IMAGE_URL_TEMPLATE_ARRAY_KEY = 'image_url_template';
+    private const IMAGE_URL_TEMPLATE_ARRAY_KEY = 'image_url_template';
 
-    const LANGUAGE_ARRAY_KEY = 'language';
+    private const LANGUAGE_ARRAY_KEY = 'language';
 
     /**
      * @var string|null
@@ -44,7 +44,6 @@ final class CaptchaSettings implements ICaptchaSettings
 
     /**
      * @param array|null $settingsData
-     *
      * @throws CaptchaSettingsException
      */
     final public function __construct(?array $settingsData = null)
@@ -55,7 +54,6 @@ final class CaptchaSettings implements ICaptchaSettings
 
     /**
      * @return string
-     *
      * @throws CaptchaSettingsException
      */
     final public function getHashSalt(): string
@@ -112,7 +110,6 @@ final class CaptchaSettings implements ICaptchaSettings
 
     /**
      * @param array|null $settingsData
-     *
      * @throws CaptchaSettingsException
      */
     private function _mapSettingsData(?array $settingsData = null): void
@@ -150,8 +147,12 @@ final class CaptchaSettings implements ICaptchaSettings
             $settingsData[CaptchaSettings::LANGUAGE_ARRAY_KEY] = null;
         }
 
-        $this->_setHashSalt($settingsData[CaptchaSettings::HASH_SALT_ARRAY_KEY]);
-        $this->_setDataDirPath($settingsData[CaptchaSettings::DATA_DIR_PATH_ARRAY_KEY]);
+        $this->_setHashSalt(
+            $settingsData[CaptchaSettings::HASH_SALT_ARRAY_KEY]
+        );
+        $this->_setDataDirPath(
+            $settingsData[CaptchaSettings::DATA_DIR_PATH_ARRAY_KEY]
+        );
 
         $this->_setImageUrlTemplate(
             $settingsData[CaptchaSettings::IMAGE_URL_TEMPLATE_ARRAY_KEY]
@@ -162,7 +163,6 @@ final class CaptchaSettings implements ICaptchaSettings
 
     /**
      * @param array|null $settingsData
-     *
      * @throws CaptchaSettingsException
      */
     private function _checkSettingsData(?array $settingsData = null): void
@@ -196,7 +196,6 @@ final class CaptchaSettings implements ICaptchaSettings
 
     /**
      * @param string|null $hashSalt
-     *
      * @throws CaptchaSettingsException
      */
     private function _setHashSalt(?string $hashSalt = null): void
@@ -213,7 +212,6 @@ final class CaptchaSettings implements ICaptchaSettings
 
     /**
      * @param string|null $dataDirPath
-     *
      * @throws CaptchaSettingsException
      */
     private function _setDataDirPath(?string $dataDirPath = null): void
@@ -239,8 +237,7 @@ final class CaptchaSettings implements ICaptchaSettings
      */
     private function _setImageUrlTemplate(
         ?string $imageUrlTemplate = null
-    ): void
-    {
+    ): void {
         if (empty($imageUrlTemplate)) {
             $imageUrlTemplate = CaptchaSettings::DEFAULT_IMAGE_URL_TEMPLATE;
         }

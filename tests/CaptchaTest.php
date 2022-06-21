@@ -4,17 +4,17 @@ use PHPUnit\Framework\TestCase;
 
 class CaptchaTest extends TestCase
 {
-    const HASH_SALT = 'test';
+    private const HASH_SALT = 'test';
 
-    const DATA_DIR_PATH = __DIR__ . '/tmp';
+    private const DATA_DIR_PATH = __DIR__ . '/tmp';
 
-    const IMAGE_URL_TEMPLATE = '/test/';
+    private const IMAGE_URL_TEMPLATE = '/test/';
 
-    const LANGUAGE = 'test';
+    private const LANGUAGE = 'test';
 
-    const COPY_DATABASE_FILE_PATH = __DIR__ . '/samples/dictionaries.db';
+    private const COPY_DATABASE_FILE_PATH = __DIR__ . '/samples/dictionaries.db';
 
-    const DATABASE_FILE_PATH = __DIR__ . '/tmp/dictionaries.db';
+    private const DATABASE_FILE_PATH = __DIR__ . '/tmp/dictionaries.db';
 
     public function __construct()
     {
@@ -79,7 +79,8 @@ class CaptchaTest extends TestCase
         }
 
         if (file_exists(static::DATA_DIR_PATH) && is_dir($path)) {
-            array_map([$this, '_removeTestFiles'], glob(sprintf('%s/*', $path)));
+            array_map([$this, '_removeTestFiles'],
+                glob(sprintf('%s/*', $path)));
             rmdir($path);
         }
     }

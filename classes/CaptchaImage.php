@@ -16,63 +16,63 @@ use Throwable;
 
 final class CaptchaImage implements ICaptchaImage
 {
-    const OUTPUT_IMAGE_FORMAT = 'png';
+    private const OUTPUT_IMAGE_FORMAT = 'png';
 
-    const BACKGROUND_COLOR = '#FFFFFF';
+    private const BACKGROUND_COLOR = '#FFFFFF';
 
-    const TEXT_COLOR = '#997755';
-    const TEXT_IDENT_X = 45;
-    const TEXT_IDENT_Y = 80;
+    private const TEXT_COLOR = '#997755';
+    private const TEXT_IDENT_X = 45;
+    private const TEXT_IDENT_Y = 80;
 
-    const CHAR_ANGLE = 25;
-    const CHAR_INDENT_X = 30;
-    const CHAR_INDENT_Y = 53;
+    private const CHAR_ANGLE = 25;
+    private const CHAR_INDENT_X = 30;
+    private const CHAR_INDENT_Y = 53;
 
-    const FONT_PATH = __DIR__ . '/../res/font.ttf';
-    const FONT_SIZE = 50;
-    const FONT_WEIGHT = 900;
-    const FONT_STROKE_WIDTH = 1;
+    private const FONT_PATH = __DIR__ . '/../res/font.ttf';
+    private const FONT_SIZE = 50;
+    private const FONT_WEIGHT = 900;
+    private const FONT_STROKE_WIDTH = 1;
 
-    const IMAGE_WIDTH = 500;
-    const IMAGE_HEIGHT = 100;
+    private const IMAGE_WIDTH = 500;
+    private const IMAGE_HEIGHT = 100;
 
-    const IMAGE_TEMPORARY_WIDTH = 1000;
-    const IMAGE_TEMPORARY_HEIGHT = 200;
+    private const IMAGE_TEMPORARY_WIDTH = 1000;
+    private const IMAGE_TEMPORARY_HEIGHT = 200;
 
-    const IMAGE_BLUR_RADIUS = 0.8;
-    const IMAGE_BLUR_SIGMA = 0.8;
+    private const IMAGE_BLUR_RADIUS = 0.8;
+    private const IMAGE_BLUR_SIGMA = 0.8;
 
-    const IMAGE_SHARPEN_RADIUS = 2.0;
-    const IMAGE_SHARPEN_SIGMA = 2.0;
+    private const IMAGE_SHARPEN_RADIUS = 2.0;
+    private const IMAGE_SHARPEN_SIGMA = 2.0;
 
-    const IMAGE_BRIGHTNESS = -5;
-    const IMAGE_CONTRAST = 5;
+    private const IMAGE_BRIGHTNESS = -5;
+    private const IMAGE_CONTRAST = 5;
 
-    const IMAGE_FILTER_SIZE_PROPORTION = 1.1;
+    private const IMAGE_FILTER_SIZE_PROPORTION = 1.1;
 
-    const STROKE_OPACITY = 1;
-    const STROKE_WIDTH = 1;
+    private const STROKE_OPACITY = 1;
+    private const STROKE_WIDTH = 1;
 
-    const BIG_DOT_SIZE = 2;
-    const MIDDLE_DOT_SIZE = 1;
-    const SMALL_DOT_SIZE = 0;
+    private const BIG_DOT_SIZE = 2;
+    private const MIDDLE_DOT_SIZE = 1;
+    private const SMALL_DOT_SIZE = 0;
 
-    const COUNT_OF_BIG_DOTS = 500;
-    const COUNT_OF_MIDDLE_DOTS = 1000;
-    const COUNT_OF_SMALL_DOTS = 5000;
+    private const COUNT_OF_BIG_DOTS = 500;
+    private const COUNT_OF_MIDDLE_DOTS = 1000;
+    private const COUNT_OF_SMALL_DOTS = 5000;
 
-    const COUNT_OF_LINES = 10;
-    const COUNT_OF_COLORS = 16;
+    private const COUNT_OF_LINES = 10;
+    private const COUNT_OF_COLORS = 16;
 
-    const COUNT_OF_BLUR_FILTERS = 3;
-    const COUNT_OF_RESIZE_FILTERS = 3;
+    private const COUNT_OF_BLUR_FILTERS = 3;
+    private const COUNT_OF_RESIZE_FILTERS = 3;
 
-    const RESIZE_FILTER_RATIO_X = 0.5;
-    const RESIZE_FILTER_RATIO_Y = 0.375;
+    private const RESIZE_FILTER_RATIO_X = 0.5;
+    private const RESIZE_FILTER_RATIO_Y = 0.375;
 
-    const RESIZE_BLUR_FACTOR = 0.5;
+    private const RESIZE_BLUR_FACTOR = 0.5;
 
-    const IS_POSTERIZE_DITHER = true;
+    private const IS_POSTERIZE_DITHER = true;
 
     /**
      * @var Imagick

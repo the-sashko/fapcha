@@ -5,21 +5,21 @@ use Sonder\Plugins\Captcha\Interfaces\ICaptchaStore;
 
 final class CaptchaStoreTest extends CaptchaTest
 {
-    const DATA_DIR_PATH = __DIR__ . '/../tmp';
+    private const DATA_DIR_PATH = __DIR__ . '/../tmp';
 
-    const DATABASE_FILE_NAME = 'dictionaries.db';
+    private const DATABASE_FILE_NAME = 'dictionaries.db';
 
-    const DICTIONARY_ADJECTIVE = 'test_adjective_male';
+    private const DICTIONARY_ADJECTIVE = 'test_adjective_male';
 
-    const DICTIONARY_NOUN = 'test_noun_male';
+    private const DICTIONARY_NOUN = 'test_noun_male';
 
-    const WORD_ADJECTIVE = 'foo';
+    private const WORD_ADJECTIVE = 'foo';
 
-    const WORD_NOUN = 'bar';
+    private const WORD_NOUN = 'bar';
 
-    const COUNT_WORDS = 1;
+    private const COUNT_WORDS = 1;
 
-    const TEXT = 'foo bar';
+    private const TEXT = 'foo bar';
 
     final public function testGetRandomWord(): void
     {
@@ -134,7 +134,9 @@ final class CaptchaStoreTest extends CaptchaTest
             CaptchaStoreTest::DICTIONARY_ADJECTIVE
         );
 
-        $word = $captchaStore->getRandomWord(CaptchaStoreTest::DICTIONARY_ADJECTIVE);
+        $word = $captchaStore->getRandomWord(
+            CaptchaStoreTest::DICTIONARY_ADJECTIVE
+        );
 
         $this->assertEquals(CaptchaStoreTest::WORD_ADJECTIVE, $word);
     }
@@ -207,14 +209,20 @@ final class CaptchaStoreTest extends CaptchaTest
             [CaptchaStoreTest::DICTIONARY_ADJECTIVE]
         );
 
-        $this->assertEquals(CaptchaStoreTest::COUNT_WORDS, $countDictionaryRows);
+        $this->assertEquals(
+            CaptchaStoreTest::COUNT_WORDS,
+            $countDictionaryRows
+        );
 
         $countDictionaryRows = $countDictionaryRowsMethod->invokeArgs(
             $captchaStore,
             [CaptchaStoreTest::DICTIONARY_NOUN]
         );
 
-        $this->assertEquals(CaptchaStoreTest::COUNT_WORDS, $countDictionaryRows);
+        $this->assertEquals(
+            CaptchaStoreTest::COUNT_WORDS,
+            $countDictionaryRows
+        );
     }
 
     /**
@@ -260,13 +268,15 @@ final class CaptchaStoreTest extends CaptchaTest
 
         $this->assertNotEmpty($exception);
 
-        $this->assertEmpty($getWordMethod->invokeArgs(
-            $captchaStore,
-            [
-                CaptchaStoreTest::DICTIONARY_ADJECTIVE,
-                CaptchaStoreTest::COUNT_WORDS + 1
-            ]
-        ));
+        $this->assertEmpty(
+            $getWordMethod->invokeArgs(
+                $captchaStore,
+                [
+                    CaptchaStoreTest::DICTIONARY_ADJECTIVE,
+                    CaptchaStoreTest::COUNT_WORDS + 1
+                ]
+            )
+        );
 
         $word = $getWordMethod->invokeArgs(
             $captchaStore,
@@ -371,15 +381,19 @@ final class CaptchaStoreTest extends CaptchaTest
 
         $this->assertNotEmpty($exception);
 
-        $this->assertTrue($queryMethod->invokeArgs(
-            $captchaStore,
-            [$createQuery]
-        ));
+        $this->assertTrue(
+            $queryMethod->invokeArgs(
+                $captchaStore,
+                [$createQuery]
+            )
+        );
 
-        $this->assertTrue($queryMethod->invokeArgs(
-            $captchaStore,
-            [$insertQuery]
-        ));
+        $this->assertTrue(
+            $queryMethod->invokeArgs(
+                $captchaStore,
+                [$insertQuery]
+            )
+        );
 
         $row = $getRowMethod->invokeArgs($captchaStore, [$selectQuery]);
 

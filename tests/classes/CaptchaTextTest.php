@@ -7,19 +7,19 @@ use Sonder\Plugins\Captcha\Exceptions\CaptchaTextException;
 
 final class CaptchaTextTest extends CaptchaTest
 {
-    const DATA_DIR_PATH = __DIR__ . '/../tmp';
+    private const DATA_DIR_PATH = __DIR__ . '/../tmp';
 
-    const DATABASE_FILE_PATH = __DIR__ . '/../tmp/dictionaries.db';
+    private const DATABASE_FILE_PATH = __DIR__ . '/../tmp/dictionaries.db';
 
-    const DATABASE_FILE_NAME = 'dictionaries.db';
+    private const DATABASE_FILE_NAME = 'dictionaries.db';
 
-    const DICTIONARY_ADJECTIVE = 'test_adjective_male';
+    private const DICTIONARY_ADJECTIVE = 'test_adjective_male';
 
-    const DICTIONARY_NOUN = 'test_noun_male';
+    private const DICTIONARY_NOUN = 'test_noun_male';
 
-    const WORD_ADJECTIVE = 'foo';
+    private const WORD_ADJECTIVE = 'foo';
 
-    const SETTINGS_DATA_LIST = [
+    private const SETTINGS_DATA_LIST = [
         [
             'hash_salt' => 'foo',
             'image_url_template' => 'foo',
@@ -37,7 +37,7 @@ final class CaptchaTextTest extends CaptchaTest
         ]
     ];
 
-    const SETTINGS_META_LIST = [
+    private const SETTINGS_META_LIST = [
         'foo' => [
             'gender_derivatives' => true
         ],
@@ -49,17 +49,17 @@ final class CaptchaTextTest extends CaptchaTest
         ]
     ];
 
-    const INVALID_SETTINGS_META_LIST = [
+    private const INVALID_SETTINGS_META_LIST = [
         'foo' => 'bar'
     ];
 
-    const TEST_FILE_PATH = __DIR__ . '/../tmp/test.txt';
+    private const TEST_FILE_PATH = __DIR__ . '/../tmp/test.txt';
 
-    const LANGUAGE = 'test';
+    private const LANGUAGE = 'test';
 
-    const INVALID_LANGUAGE = 'invalid';
+    private const INVALID_LANGUAGE = 'invalid';
 
-    const DICTIONARIES_WITH_GENDERS = [
+    private const DICTIONARIES_WITH_GENDERS = [
         'test_adjective_male' => '{dir}/test/adjective_male.txt',
         'test_adjective_female' => '{dir}/test/adjective_female.txt',
         'test_adjective_neutral' => '{dir}/test/adjective_neutral.txt',
@@ -70,7 +70,7 @@ final class CaptchaTextTest extends CaptchaTest
         'test_noun_plural' => '{dir}/test/noun_plural.txt'
     ];
 
-    const DICTIONARIES_WITHOUT_GENDERS = [
+    private const DICTIONARIES_WITHOUT_GENDERS = [
         'test_adjective_male' => '{dir}/test/adjective.txt',
         'test_adjective_female' => '{dir}/test/adjective.txt',
         'test_adjective_neutral' => '{dir}/test/adjective.txt',
@@ -81,7 +81,7 @@ final class CaptchaTextTest extends CaptchaTest
         'test_noun_plural' => '{dir}/test/noun.txt'
     ];
 
-    const TEXT = 'foo bar';
+    private const TEXT = 'foo bar';
 
     /**
      * @throws CaptchaStoreException
@@ -185,15 +185,19 @@ final class CaptchaTextTest extends CaptchaTest
 
         $this->assertFalse($isValidLanguageMethod->invoke($captchaText));
 
-        $this->assertFalse($isValidLanguageMethod->invokeArgs(
-            $captchaText,
-            [CaptchaTextTest::INVALID_LANGUAGE]
-        ));
+        $this->assertFalse(
+            $isValidLanguageMethod->invokeArgs(
+                $captchaText,
+                [CaptchaTextTest::INVALID_LANGUAGE]
+            )
+        );
 
-        $this->assertTrue($isValidLanguageMethod->invokeArgs(
-            $captchaText,
-            [CaptchaTextTest::LANGUAGE]
-        ));
+        $this->assertTrue(
+            $isValidLanguageMethod->invokeArgs(
+                $captchaText,
+                [CaptchaTextTest::LANGUAGE]
+            )
+        );
     }
 
     /**
@@ -332,15 +336,19 @@ final class CaptchaTextTest extends CaptchaTest
 
         $this->assertNotEmpty($dictionaries);
 
-        $this->assertArrayHasKey(CaptchaTextTest::DICTIONARY_ADJECTIVE,
-            $dictionaries);
+        $this->assertArrayHasKey(
+            CaptchaTextTest::DICTIONARY_ADJECTIVE,
+            $dictionaries
+        );
 
         $dictionary = $dictionaries[CaptchaTextTest::DICTIONARY_ADJECTIVE];
 
         $this->assertNotEmpty($dictionary);
 
-        $this->assertArrayHasKey(CaptchaTextTest::DICTIONARY_NOUN,
-            $dictionaries);
+        $this->assertArrayHasKey(
+            CaptchaTextTest::DICTIONARY_NOUN,
+            $dictionaries
+        );
 
         $dictionary = $dictionaries[CaptchaTextTest::DICTIONARY_NOUN];
 
@@ -377,9 +385,11 @@ final class CaptchaTextTest extends CaptchaTest
 
         $this->assertNotEmpty($exception);
 
-        $this->assertFalse($isDictionariesMetaHasCorrectFormatMethod->invoke(
-            $captchaText
-        ));
+        $this->assertFalse(
+            $isDictionariesMetaHasCorrectFormatMethod->invoke(
+                $captchaText
+            )
+        );
 
         $this->assertTrue(
             $isDictionariesMetaHasCorrectFormatMethod->invokeArgs(
@@ -475,7 +485,10 @@ final class CaptchaTextTest extends CaptchaTest
             unlink(CaptchaTextTest::TEST_FILE_PATH);
         }
 
-        file_put_contents(CaptchaTextTest::TEST_FILE_PATH, CaptchaTextTest::TEXT);
+        file_put_contents(
+            CaptchaTextTest::TEST_FILE_PATH,
+            CaptchaTextTest::TEXT
+        );
         chmod(CaptchaTextTest::TEST_FILE_PATH, 0775);
 
         $exception = null;
@@ -519,7 +532,6 @@ final class CaptchaTextTest extends CaptchaTest
 
     /**
      * @param bool $isGenderDerivatives
-     *
      * @return string[]
      */
     private function _getSampleDictionaries(bool $isGenderDerivatives): array

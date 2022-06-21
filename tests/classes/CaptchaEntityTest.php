@@ -7,14 +7,13 @@ use Sonder\Plugins\Captcha\Exceptions\CaptchaSettingsException;
 
 final class CaptchaEntityTest extends CaptchaTest
 {
-    const TEXT = 'foo bar';
+    private const TEXT = 'foo bar';
 
-    const HASH = '2918553c85b053da3f1bf4777fc64cca112e956eb1e8f3b627def9ab5dd' .
-    '31ac8';
+    private const HASH = '2918553c85b053da3f1bf4777fc64cca112e956eb1e8f3b627def9ab5dd31ac8';
 
-    const IMAGE_FILE_NAME = 'test.png';
+    private const IMAGE_FILE_NAME = 'test.png';
 
-    const ENTITY_DATA_LIST = [
+    private const ENTITY_DATA_LIST = [
         [
             'text' => 'foo',
             'hash' => 'foo',
@@ -32,7 +31,7 @@ final class CaptchaEntityTest extends CaptchaTest
         ]
     ];
 
-    const IMAGE_DIRECTORY_PATH = 'test';
+    private const IMAGE_DIRECTORY_PATH = 'test';
 
     /**
      * @throws CaptchaEntityException
@@ -245,10 +244,12 @@ final class CaptchaEntityTest extends CaptchaTest
                 $imageFileName
             );
 
-            $this->assertTrue((bool)preg_match(
-                $assertRegexp,
-                $imageFilePath
-            ));
+            $this->assertTrue(
+                (bool)preg_match(
+                    $assertRegexp,
+                    $imageFilePath
+                )
+            );
 
             $assertRegexp = '/^%s[\d]{4}\/[\d]{2}\/[\d]{2}\/' .
                 '[\d]{2}\/[\d]{2}\/[\d]{2}\/%s$/sui';
@@ -259,10 +260,12 @@ final class CaptchaEntityTest extends CaptchaTest
                 $imageFileName
             );
 
-            $this->assertTrue((bool)preg_match(
-                $assertRegexp,
-                $imageUrlPath
-            ));
+            $this->assertTrue(
+                (bool)preg_match(
+                    $assertRegexp,
+                    $imageUrlPath
+                )
+            );
         }
     }
 
@@ -288,10 +291,12 @@ final class CaptchaEntityTest extends CaptchaTest
             [$captchaSettings]
         );
 
-        $this->assertTrue((bool)preg_match(
-            '/^[\d]{4}\/[\d]{2}\/[\d]{2}\/[\d]{2}\/[\d]{2}\/[\d]{2}$/sui',
-            $directoryPath
-        ));
+        $this->assertTrue(
+            (bool)preg_match(
+                '/^[\d]{4}\/[\d]{2}\/[\d]{2}\/[\d]{2}\/[\d]{2}\/[\d]{2}$/sui',
+                $directoryPath
+            )
+        );
     }
 
     /**
