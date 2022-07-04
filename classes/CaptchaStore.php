@@ -10,9 +10,9 @@ use Throwable;
 
 final class CaptchaStore implements ICaptchaStore
 {
-    const DATABASE_FILE_NAME = 'dictionaries.db';
+    final public const TEMPORARY_DATABASE_FILE_NAME = 'dictionaries_tmp.db';
 
-    const TEMPORARY_DATABASE_FILE_NAME = 'dictionaries_tmp.db';
+    private const DATABASE_FILE_NAME = 'dictionaries.db';
 
     /**
      * @var string|null
@@ -27,14 +27,12 @@ final class CaptchaStore implements ICaptchaStore
     /**
      * @param string|null $dataDirPath
      * @param string|null $dataFileName
-     *
      * @throws CaptchaStoreException
      */
     final public function __construct(
         ?string $dataDirPath = null,
         ?string $dataFileName = null
-    )
-    {
+    ) {
         if (empty($dataDirPath)) {
             throw new CaptchaStoreException(
                 CaptchaStoreException::MESSAGE_STORE_DATA_DIR_PATH_IS_NOT_SET,
@@ -56,9 +54,7 @@ final class CaptchaStore implements ICaptchaStore
 
     /**
      * @param string|null $dictionary
-     *
      * @return string|null
-     *
      * @throws CaptchaStoreException
      */
     final public function getRandomWord(?string $dictionary = null): ?string
@@ -90,7 +86,6 @@ final class CaptchaStore implements ICaptchaStore
 
     /**
      * @param string|null $dictionary
-     *
      * @throws CaptchaStoreException
      */
     final public function createDictionary(?string $dictionary = null): void
@@ -117,14 +112,12 @@ final class CaptchaStore implements ICaptchaStore
     /**
      * @param string|null $word
      * @param string|null $dictionary
-     *
      * @throws CaptchaStoreException
      */
     final public function insertWord(
         ?string $word = null,
         ?string $dictionary = null
-    ): void
-    {
+    ): void {
         if (empty($word)) {
             throw new CaptchaStoreException(
                 CaptchaStoreException::MESSAGE_STORE_WORD_IS_NOT_SET,
@@ -186,9 +179,7 @@ final class CaptchaStore implements ICaptchaStore
 
     /**
      * @param string|null $dataDirPath
-     *
      * @return bool
-     *
      * @throws CaptchaStoreException
      */
     final public function updateDatabase(?string $dataDirPath = null): bool
@@ -288,9 +279,7 @@ final class CaptchaStore implements ICaptchaStore
 
     /**
      * @param string $dictionary
-     *
      * @return int
-     *
      * @throws CaptchaStoreException
      */
     private function _getRandomId(string $dictionary): int
@@ -302,9 +291,7 @@ final class CaptchaStore implements ICaptchaStore
 
     /**
      * @param string $dictionary
-     *
      * @return int
-     *
      * @throws CaptchaStoreException
      */
     private function _countDictionaryRows(string $dictionary): int
@@ -336,16 +323,13 @@ final class CaptchaStore implements ICaptchaStore
     /**
      * @param string|null $dictionary
      * @param int|null $id
-     *
      * @return string|null
-     *
      * @throws CaptchaStoreException
      */
     private function _getWord(
         ?string $dictionary = null,
-        ?int    $id = null
-    ): ?string
-    {
+        ?int $id = null
+    ): ?string {
         if (empty($dictionary)) {
             throw new CaptchaStoreException(
                 CaptchaStoreException::MESSAGE_STORE_DICTIONARY_IS_NOT_SET,
@@ -384,9 +368,7 @@ final class CaptchaStore implements ICaptchaStore
 
     /**
      * @param string|null $sql
-     *
      * @return array|null
-     *
      * @throws CaptchaStoreException
      */
     private function _getRow(?string $sql = null): ?array
@@ -430,7 +412,6 @@ final class CaptchaStore implements ICaptchaStore
 
     /**
      * @param string|null $sql
-     *
      * @throws CaptchaStoreException
      */
     private function _query(?string $sql = null): void

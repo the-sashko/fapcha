@@ -12,14 +12,14 @@ use Throwable;
 
 final class CaptchaText implements ICaptchaText
 {
-    const GENDERS = [
+    final public const GENDERS = [
         'male',
         'female',
         'neutral',
         'plural'
     ];
 
-    const DICTIONARIES_DIR_PATH = __DIR__ . '/../res/dictionaries';
+    private const DICTIONARIES_DIR_PATH = __DIR__ . '/../res/dictionaries';
 
     /**
      * @param string|null $language
